@@ -167,16 +167,16 @@ function doPost(e) {
             var result = obj.responses[0].textAnnotations[0].description;
             var duration = detectTime(result);
             var distance = detectDistance(result);
+            var name = getListedUserName(userId);
             Logger.log('image analyzed: ' + result + String.fromCharCode(10) + 'distance: ' + distance + ', duration: ' + duration);
             recordResult(event, result, JSON.stringify(obj), distance, duration);
             if(duration != null || distance != null) {
-              messageText = 'ナイスラン！' + String.fromCharCode(10);
+              messageText = name + 'さん、ナイスラン！' + String.fromCharCode(10);
               messageText += '距離' + String.fromCharCode(9) + (distance != null ? distance : '??') + String.fromCharCode(10);
               messageText += 'タイム' + String.fromCharCode(9) + (duration != null ? duration : '??');
-              if(duration != null && distance != null) {
+              if(duration != null && distance != null && name != 'unknown') {
                 replyLine(sourcename, replyToken, messageText);
               } else {
-                var name = getListedUserName(userId);
                 replyLineCorrect(sourcename, replyToken, messageText, name, duration, distance);
               }
             }
