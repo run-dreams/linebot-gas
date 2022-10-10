@@ -454,9 +454,16 @@ function updateResult(tag, name, distance, duration) {
 
   for (var i = lastRow; i > lastRow - 20; i--) {
     if (sheet.getRange(i, 8).getValue() == tag) {
+      var userId = sheet.getRange(i, 4).getValue();
+      var orgName = getListedUserName(userId);
+      if (orgName == 'unknown') {
+        updateListedUserName(userId, name);
+      }
       sheet.getRange(i, 5).setValue(name);
       sheet.getRange(i, 6).setValue(distance);
       sheet.getRange(i, 7).setValue(duration);
+      sheet.getRange(i, 10).setValue('更新しました');
+      sheet.getRange(i, 12).setValue(new Date());
       return '更新しました';
     }
   }
@@ -484,7 +491,7 @@ function ignoreResult(tag) {
 
 }
 
-
+// 登録ユーザの名前を取得
 function getListedUserName(userId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -498,6 +505,25 @@ function getListedUserName(userId) {
     }
   }
   return 'unknown';
+
+}
+
+// 登録ユーザの名前を更新
+function updateListedUserName(userId, name) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('User List');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = 2; i <= lastRow; i++) {
+    if (sheet.getRange(i, 1).getValue() == userId) {
+      sheet.getRange(i, 2).setValue(name);
+      sheet.getRange(i, 5).setValue(new Date());
+      return '更新しました'
+    }
+  }
+  return '指定のユーザが見つかりませんでした';
 
 }
 
@@ -525,7 +551,7 @@ function recordUser(userId) {
         val = userId;
         break;
       case "displayName":
-        val = '未設定さん';
+        val = 'unknown';
         break;
       case "addDate":
       case "updateDate":
