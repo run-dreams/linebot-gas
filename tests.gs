@@ -691,9 +691,26 @@ S
 82%
 共有`;
 
+var sample21 = `ON/OFF
+ACT./PWR.
+DISP.
+רופאי
+EPSON
+88
+☎ 10/13
+8:58 - 10:00
+10.008 km
+00:58'44″
+5'52"/km
+MODE
+START/STOP
+WORKOUT
+LAP/MENU
+MENU CONN`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample20', sample20, '0:26:12', '2.02'); // iOS標準アプリ：フィットネス
+  result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
 
   console.log(`results: ${result}`);
 }
@@ -720,6 +737,7 @@ function myTest() {
   result += detectTest('sample18', sample18, '0:48:52', '7.372'); // 小池さんのLAP表示で複数マッチする問題
   result += detectTest('sample19', sample19, '0:30:30', '3.79'); // Garmin Connect
   result += detectTest('sample20', sample20, '0:26:12', '2.02'); // iOS標準アプリ：フィットネス
+  result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
 
   console.log(`results: ${result}`);
 }
