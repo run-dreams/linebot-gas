@@ -708,9 +708,38 @@ WORKOUT
 LAP/MENU
 MENU CONN`;
 
+var sample22 = `ON/OFF
+LIGHT
+EPSON
+89
+10/17
+9:25 - 9:47
+4.023km
+00:2143"-
+5'23"/km
+START/STOP
+MODE
+AP/MENU
+MENU`;
+
+var sample23 = `THRE
+EPSON
+8
+!!
+10/16
+4:49-6:01 -
+12.0 13km
+01:073 1"-
+537/km
+START/STOP
+MODE
+WORKOUT
+LAP/MENU
+MENU CON`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
+  result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
 
   console.log(`results: ${result}`);
 }
@@ -738,6 +767,8 @@ function myTest() {
   result += detectTest('sample19', sample19, '0:30:30', '3.79'); // Garmin Connect
   result += detectTest('sample20', sample20, '0:26:12', '2.02'); // iOS標準アプリ：フィットネス
   result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
+  result += detectTest('sample22', sample22, '00:21:43', '4.023'); // EPSON
+  result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
 
   console.log(`results: ${result}`);
 }

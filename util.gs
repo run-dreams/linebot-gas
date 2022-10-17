@@ -36,11 +36,11 @@ function detectTime(result) {
   }
   // 0:49'01" LAP
   // 01:00′ 15"-
-  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′][ ]*([0-5][0-9])[\"\″]/g)];
+  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]/g)];
   if ( a.length > 0) {
     console.log(`match dt6 with ${a.length} patterns.`);
     for(i=0; i<a.length;i++) {
-      duration = a[i][1] + ':' + a[i][2] + ':' + a[i][3];
+      duration = a[i][1] + ':' + a[i][2] + ':' + a[i][3] + a[i][4];
       if(duration != '0:00:00') {
         // TODO: 複数あったら返して選択してもらう。
         return duration;
