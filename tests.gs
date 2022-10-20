@@ -737,9 +737,16 @@ WORKOUT
 LAP/MENU
 MENU CON`;
 
+var sample24 = `0.78
+5:59.6
+7:40/km
+GARMIN
+00000000
+BACK`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
+  result += detectTest('sample24', sample24, '5:59.6', '0.78'); // GARMIN
 
   console.log(`results: ${result}`);
 }
@@ -769,6 +776,7 @@ function myTest() {
   result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
   result += detectTest('sample22', sample22, '00:21:43', '4.023'); // EPSON
   result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
+  result += detectTest('sample24', sample24, '5:59.6', '0.78'); // GARMIN
 
   console.log(`results: ${result}`);
 }

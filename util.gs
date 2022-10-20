@@ -6,6 +6,12 @@ function detectTime(result) {
     console.log('match dt1');
     return a[1] + ':' + a[2] + ':' + a[3] + '.' + a[4];
   }
+  // 5:59.6
+  a = result.match(/([0-5]*[0-9]):([0-5][0-9])\.([0-9]{1,3})/);
+  if ( a != null) {
+    console.log('match dt1\'');
+    return a[1] + ':' + a[2] + '.' + a[3];
+  }
   // タイム
   // 01:36:08
   // TATTA
@@ -107,6 +113,18 @@ function detectDistance(result) {
   if ( a != null) {
     console.log(`match dd5 with ${a[0]}`);
     return a[1] + '.' + a[2] + a[3];
+  }
+  // 0.78
+  a = [...result.matchAll(/^([0-9]+)\.([0-9]+)\n/g)];
+  if ( a.length > 0) {
+    for(i=0; i<a.length;i++) {
+      distance = a[i][1] + '.' + a[i][2];
+      if(distance != '0.000') {
+        console.log(`match dd6 with ${a[i][0]} of ${a.length} patterns.`);
+        // TODO: 複数あったら返して選択してもらう。
+        return distance;
+      }
+    }
   }
 
   return null;
