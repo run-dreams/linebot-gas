@@ -744,9 +744,22 @@ GARMIN
 00000000
 BACK`;
 
+var sample25 = `DISP
+EPSON
+START/STOP
+MODE
+11/ 2
+13:43 - 14:39
+9 10.0 12km
+00:52'23"
+5′13″/km
+WORKOUT
+LAP/MENU
+MENU C`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample24', sample24, '5:59.6', '0.78'); // GARMIN
+  result += detectTest('sample25', sample25, '00:52:23', '10.012'); // EPSON
 
   console.log(`results: ${result}`);
 }
@@ -777,6 +790,7 @@ function myTest() {
   result += detectTest('sample22', sample22, '00:21:43', '4.023'); // EPSON
   result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
   result += detectTest('sample24', sample24, '5:59.6', '0.78'); // GARMIN
+  result += detectTest('sample25', sample25, '00:52:23', '10.012'); // EPSON
 
   console.log(`results: ${result}`);
 }
