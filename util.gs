@@ -109,7 +109,7 @@ function detectDistance(result) {
     return a[1] + '.' + a[2];
   }
   // 8.0 14km EPSON Watchで01が 0 1になる問題
-  a = result.match(/\n([0-9]+)\.([0-9]+) ([0-9]+)km\n/);
+  a = result.match(/([0-9]+)\.([0-9]+) ([0-9]+)km\n/);
   if ( a != null) {
     console.log(`match dd5 with ${a[0]}`);
     return a[1] + '.' + a[2] + a[3];
