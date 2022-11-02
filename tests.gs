@@ -757,9 +757,41 @@ WORKOUT
 LAP/MENU
 MENU C`;
 
+var sample26 = `DISP
+THALT
+EPSON
+START/STO
+MODE
+10/22
+13:35-14:38 -
+9 11.0 13km
+..90.65:00 (
+522/km
+WORKOUT
+LAP/MENU
+MENU CON`;
+
+var sample27 = `ACT./PWR.
+DISP.
+410/NO
+LIGH
+masled
+EPSON
+10/12
+MODE
+START/STOP
+60:SL - ES EL
+13.009km
+.LL.80:10
+5′14″/km
+WORKOUT
+LAP/MENU
+MENU/CONN`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample25', sample25, '00:52:23', '10.012'); // EPSON
+  result += detectTest('sample26', sample26, '00:59:06', '11.013'); // EPSON タイムが180°回転して検出
+  result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
 
   console.log(`results: ${result}`);
 }
@@ -791,6 +823,8 @@ function myTest() {
   result += detectTest('sample23', sample23, '01:07:31', '12.013'); // EPSON
   result += detectTest('sample24', sample24, '5:59.6', '0.78'); // GARMIN
   result += detectTest('sample25', sample25, '00:52:23', '10.012'); // EPSON
+  result += detectTest('sample26', sample26, '00:59:06', '11.013'); // EPSON タイムが180°回転して検出
+  result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
 
   console.log(`results: ${result}`);
 }
