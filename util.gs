@@ -72,6 +72,12 @@ function detectTime(result) {
     console.log('match dt6r');
     return rotateTimeStr(a[3]) + ':' + rotateTimeStr(a[2]) + ':' + rotateTimeStr(a[1]);
   }
+  // ¹10:32 GARMINのシンプルな表示でタイムの時が左上に小さく表示される。
+  a = result.replace('¹', '1:').replace('²','2:').replace('³','3:').match(/([0-9]+):([0-5][0-9]):([0-5][0-9])/);
+  if ( a != null) {
+    console.log('match dt5g');
+    return a[1] + ':' + a[2] + ':' + a[3];
+  }
 
   return null;
 }
@@ -134,7 +140,7 @@ function detectDistance(result) {
     return a[1] + '.' + a[2] + a[3];
   }
   // 0.78
-  a = [...result.matchAll(/^([0-9]+)\.([0-9]+)\n/g)];
+  a = [...result.matchAll(/([0-9]+)\.([0-9]+)\n/g)];
   if ( a.length > 0) {
     for(i=0; i<a.length;i++) {
       distance = a[i][1] + '.' + a[i][2];
