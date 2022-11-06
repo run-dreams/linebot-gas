@@ -137,7 +137,7 @@ function doPost(e) {
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
-            a = messageText.match(/^([0-9a-f]{7}):修正\n氏名\s(.*)\n距離\s([0-9]+\.[0-9]+)\nタイム\s([0-1]+:[0-5][0-9]:[0-5][0-9])/);
+            a = messageText.match(/^([0-9a-f]{7}):修正\n氏名\s(.*)\n距離\s([0-9]+\.[0-9]+)\nタイム\s([0-9]+:[0-5][0-9]:[0-5][0-9])/);
             if(a != null){
               // 修正
               replyLine(sourcename, replyToken, updateResult(a[1], a[2], a[3], a[4]));
@@ -147,7 +147,7 @@ function doPost(e) {
               replyAddResultInstruction(sourcename, replyToken);
               break;
             }
-            a = messageText.match(/^([0-9a-f]{7}):追加\n氏名\s(.*)\n距離\s([0-9]+\.[0-9]+)\nタイム\s([0-1]+:[0-5][0-9]:[0-5][0-9])/);
+            a = messageText.match(/^([0-9a-f]{7}):追加\n氏名\s(.*)\n距離\s([0-9]+\.[0-9]+)\nタイム\s([0-9]+:[0-5][0-9]:[0-5][0-9])/);
             if(a != null){
               // 追加
               replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4]));
