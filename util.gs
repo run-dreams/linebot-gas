@@ -42,7 +42,7 @@ function detectTime(result) {
   }
   // 0:49'01" LAP
   // 01:00′ 15"-
-  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]/g)];
+  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]*/g)];
   if ( a.length > 0) {
     console.log(`match dt6 with ${a.length} patterns.`);
     for(i=0; i<a.length;i++) {
