@@ -798,9 +798,15 @@ orgar
 沙
 J`;
 
+var sample29 = `2:11'25
+19.7
+1 Lap
+SUUNTO
+LIGHT LOCK`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
+  result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
 
   console.log(`results: ${result}`);
 }
@@ -835,6 +841,7 @@ function myTest() {
   result += detectTest('sample26', sample26, '00:59:06', '11.013'); // EPSON タイムが180°回転して検出
   result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
   result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
+  result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
 
   console.log(`results: ${result}`);
 }
