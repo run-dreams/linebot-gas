@@ -788,10 +788,19 @@ WORKOUT
 LAP/MENU
 MENU/CONN`;
 
+var sample28 = `距離
+5.48
+版
+¹10:32
+GARMIN
+1118
+orgar
+沙
+J`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample26', sample26, '00:59:06', '11.013'); // EPSON タイムが180°回転して検出
-  result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
+  result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
 
   console.log(`results: ${result}`);
 }
@@ -815,7 +824,7 @@ function myTest() {
   result += detectTest('sample15', sample15, '0:23:47', '3.02'); // 3ラン同時
   result += detectTest('sample16', sample16, '00:49:46', '8.017'); // EPSON 01が0.1になる問題
   result += detectTest('sample17', sample17, '01:00:15', '10.009'); // EPSON 01が0.1になる問題　タイムでも発生
-  result += detectTest('sample18', sample18, '0:48:52', '7.372'); // 小池さんのLAP表示で複数マッチする問題
+  result += detectTest('sample18', sample18, '0:48:52', '7.372'); // LAP表示で複数マッチする問題
   result += detectTest('sample19', sample19, '0:30:30', '3.79'); // Garmin Connect
   result += detectTest('sample20', sample20, '0:26:12', '2.02'); // iOS標準アプリ：フィットネス
   result += detectTest('sample21', sample21, '00:58:44', '10.008'); // EPSON
@@ -825,6 +834,7 @@ function myTest() {
   result += detectTest('sample25', sample25, '00:52:23', '10.012'); // EPSON
   result += detectTest('sample26', sample26, '00:59:06', '11.013'); // EPSON タイムが180°回転して検出
   result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
+  result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
 
   console.log(`results: ${result}`);
 }
