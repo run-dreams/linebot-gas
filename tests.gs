@@ -804,9 +804,50 @@ var sample29 = `2:11'25
 SUUNTO
 LIGHT LOCK`;
 
+var sample30 = `22:34
+← 現在
+さいたま
+music
+さいたま市役所 【
+サ
+別所沼公園
+裏門通り
+1
+志木街道
+Google
+ランニング
+LINE
+マンガ
+5.04
+距離 (km)
+40
+中山道
+平均ペース
+平均速度
+※
+17
+埼玉県庁
+00:24:39
+時間
+うらわ美術館
+20
+ランキングで自分の順位を確認
+191
+坂下通り
+16
+311
+カロリー
+89%
+埼玉会館
+463
+さいたま地方裁判所
+旧中山道
+04:53 min/km
+12.3km毎時`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
+  result += detectTest('sample30', sample30, '00:24:39', '5.04'); // km毎時ってのが認識された
 
   console.log(`results: ${result}`);
 }
@@ -842,6 +883,7 @@ function myTest() {
   result += detectTest('sample27', sample27, '01:08:11', '13.009'); // EPSON タイムが180°回転して検出
   result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
   result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
+  result += detectTest('sample30', sample30, '00:24:39', '5.04'); // km毎時ってのが認識された
 
   console.log(`results: ${result}`);
 }
