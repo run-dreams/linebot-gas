@@ -54,7 +54,7 @@ function detectTime(result) {
     }
   }
   // 01:00
-  a = [...result.matchAll(/\n([0-5]*[0-9]):([0-5][0-9])\n/g)];
+  a = [...result.matchAll(/\n([0-5]{0,1}[0-9]):([0-5][0-9])\n/g)];
   if ( a.length > 0) {
     console.log(`match dt7 with ${a.length} patterns.`);
     for(i=0; i<a.length;i++) {
@@ -76,6 +76,12 @@ function detectTime(result) {
   a = result.replace('¹', '1:').replace('²','2:').replace('³','3:').match(/([0-9]+):([0-5][0-9]):([0-5][0-9])/);
   if ( a != null) {
     console.log('match dt5g');
+    return a[1] + ':' + a[2] + ':' + a[3];
+  }
+  // 228:19 GARMINのシンプルな表示でタイムの時が左上に小さく表示される。上付きではなく数字として認識されるケース
+  a = result.match(/([0-9])([0-5][0-9]):([0-5][0-9])/);
+  if ( a != null) {
+    console.log('match dt7g');
     return a[1] + ':' + a[2] + ':' + a[3];
   }
 
