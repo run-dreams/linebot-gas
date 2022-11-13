@@ -2,6 +2,7 @@
 
 var CHANNEL_ACCESS_TOKEN = PropertiesService.getScriptProperties().getProperty("CHANNEL_ACCESS_TOKEN");
 var GOOGLE_API_KEY = PropertiesService.getScriptProperties().getProperty("GOOGLE_API_KEY");
+var HEALTH_CHECK_URL = PropertiesService.getScriptProperties().getProperty("HEALTH_CHECK_URL");
 
 function getUsername(userId) {
   var url = 'https://api.line.me/v2/bot/profile/' + userId;
@@ -191,4 +192,33 @@ function doPost(e) {
 
   return JSON.stringify({});
 
+}
+
+// HealthCheck用ダミーGETメソッド
+function doGet() {
+  return ContentService.createTextOutput(JSON.stringify('{"success":true}')).setMimeType(ContentService.MimeType.JSON);
+}
+
+// HealthCheck invoke by scheduled trigger
+function checkSelf() {
+  var url = HEALTH_CHECK_URL;
+  var response;
+  try {
+    response = UrlFetchApp.fetch(url, {
+      "muteHttpExceptions" : true,
+      "validateHttpsCertificates" : false,
+      "followRedirects" : true
+    });
+    Logger.log('checkSelf() : ' + response.getResponseCode());
+    if (response.getResponseCode() != 200) {
+      // お知らせ
+      // sendLine(ADMIN_LINE_ID, '寝たかも。 status:' + response.getResponseCode());
+    }
+    return 'OK';
+  } catch(e) {
+    // 例外エラー処理
+    Logger.log('Error:')
+    Logger.log(e)
+    return null;
+  }
 }
