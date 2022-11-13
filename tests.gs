@@ -845,9 +845,15 @@ LINE
 04:53 min/km
 12.3km毎時`;
 
+var sample31 = `距離
+12.21
+外
+228:19
+GARMIN`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample30', sample30, '00:24:39', '5.04'); // km毎時ってのが認識された
+  result += detectTest('sample31', sample31, '2:28:19', '12.21'); // 上付き２でなくて２になってた。
 
   console.log(`results: ${result}`);
 }
@@ -884,6 +890,7 @@ function myTest() {
   result += detectTest('sample28', sample28, '1:10:32', '5.48'); // シンプルなGARMIN
   result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
   result += detectTest('sample30', sample30, '00:24:39', '5.04'); // km毎時ってのが認識された
+  result += detectTest('sample31', sample31, '2:28:19', '12.21'); // 上付き２でなくて２になってた。
 
   console.log(`results: ${result}`);
 }
