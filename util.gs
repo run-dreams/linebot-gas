@@ -95,24 +95,6 @@ function rotateTimeStr(src) {
 } 
 
 function detectDistance(result) {
-  // 3.70km
-  a = [...result.matchAll(/([0-9]+)\.([0-9]+)[kK][mM]/g)];
-  if ( a.length > 0) {
-    for(i=0; i<a.length;i++) {
-      distance = a[i][1] + '.' + a[i][2];
-      if(distance != '0.000') {
-        console.log(`match dd0 with ${a[i][0]} of ${a.length} patterns.`);
-        // TODO: 複数あったら返して選択してもらう。
-        return distance;
-      }
-    }
-  }
-  // 8.260 km
-  a = result.match(/([0-9]+)\.([0-9]+)[ ]*km/);
-  if ( a != null) {
-    console.log(`match dd1 with ${a[0]}`);
-    return a[1] + '.' + a[2];
-  }
   // 7.67
   // 距離(km)
   a = result.match(/([0-9]+)\.([0-9]+)\n(距離|キロメートル)/);
@@ -132,6 +114,18 @@ function detectDistance(result) {
   if ( a != null) {
     console.log(`match dd4 with ${a[0]}`);
     return a[1] + '.' + a[2];
+  }
+  // 3.70km
+  a = [...result.matchAll(/([0-9]+)\.([0-9]+)[ ]*[kK][mM]/g)];
+  if ( a.length > 0) {
+    for(i=0; i<a.length;i++) {
+      distance = a[i][1] + '.' + a[i][2];
+      if(distance != '0.000') {
+        console.log(`match dd0 with ${a[i][0]} of ${a.length} patterns.`);
+        // TODO: 複数あったら返して選択してもらう。
+        return distance;
+      }
+    }
   }
   // 8.0 14km EPSON Watchで01が 0 1になる問題
   a = result.match(/([0-9]+)\.([0-9]+) ([0-9]+)km\n/);
