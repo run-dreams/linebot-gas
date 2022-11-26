@@ -851,9 +851,38 @@ var sample31 = `距離
 228:19
 GARMIN`;
 
+var sample32 = `DISP
+LIGHT
+EPSON
+START/STOP
+MODE
+11/24
+13:40-14:45
+8 11.009km
+..LE.85:00 ✪
+5'19"/km
+WORKOUT
+LAP/MENU
+MENU CONN`;
+
+var sample33 = `THENT
+EPSON
+11/25
+9:12-10:21
+START/STO
+MODE
+12.026km
+..LE.LOLO →
+5'06"/km
+WORKOUT
+LAP/MENU
+MENU CO
+****`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample31', sample31, '2:28:19', '12.21'); // 上付き２でなくて２になってた。
+  result += detectTest('sample32', sample32, '00:58:31', '11.009'); // LE → 37
+  result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
 
   console.log(`results: ${result}`);
 }
@@ -891,6 +920,8 @@ function myTest() {
   result += detectTest('sample29', sample29, '2:11:25', '19.7'); // 秒の後ろに記号なし
   result += detectTest('sample30', sample30, '00:24:39', '5.04'); // km毎時ってのが認識された
   result += detectTest('sample31', sample31, '2:28:19', '12.21'); // 上付き２でなくて２になってた。
+  result += detectTest('sample32', sample32, '00:58:31', '11.009'); // LE → 37
+  result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
 
   console.log(`results: ${result}`);
 }
