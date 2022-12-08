@@ -84,6 +84,12 @@ function detectTime(result) {
     console.log('match dt7g');
     return a[1] + ':' + a[2] + ':' + a[3];
   }
+  // 1時間23分のような日本語表記のタイム
+  a = result.match(/([0-5]{0,1}[0-9])時間([0-5][0-9])分/);
+  if ( a != null) {
+    console.log('match dt8');
+    return a[1] + ':' + a[2] + ':00';
+  }
 
   return null;
 }
@@ -101,6 +107,12 @@ function rotateTimeStr(src) {
 } 
 
 function detectDistance(result) {
+  // 6.2 マイル
+  a = result.match(/([0-9]+)\.([0-9]+)[ ]*マイル/);
+  if ( a != null) {
+    console.log(`match dd8 with ${a[0]}`);
+    return mile2kiro(a[1] + '.' + a[2]);
+  }
   // 7.67
   // 距離(km)
   a = result.match(/([0-9]+)\.([0-9]+)\n(距離|キロメートル)/);
@@ -153,6 +165,11 @@ function detectDistance(result) {
   }
 
   return null;
+}
+
+// マイルをキロに換算
+function mile2kiro(num){
+    return (num / 0.621371).toFixed(3);
 }
 
 function sendLine(to, strMessage){

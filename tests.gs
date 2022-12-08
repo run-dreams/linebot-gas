@@ -879,10 +879,37 @@ LAP/MENU
 MENU CO
 ****`;
 
+var sample34 = `irk
+STRAVA
+No.298 Line
+YAGUCHI
+TOGASAKI
+ランニ
+a
+Tokyogaikan Expwy
+Mizumotn Park
+6.2 マイル
+SHINWA
+Misato
+Kendou No.5 Line
+SHINMATSUDO
+KOGASAKI
+Eighty One GC
+SAKAECHO
+山
+OYAGE
+ⓘ
+ΚΟΥΑ
+ベース
+"AGEム
+NEMOTO
+12:24 / マイル 1時間17分
+朝の LSD。 10㌔走り
+ました。`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample32', sample32, '00:58:31', '11.009'); // LE → 37
-  result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
+  result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
 
   console.log(`results: ${result}`);
 }
@@ -922,6 +949,7 @@ function myTest() {
   result += detectTest('sample31', sample31, '2:28:19', '12.21'); // 上付き２でなくて２になってた。
   result += detectTest('sample32', sample32, '00:58:31', '11.009'); // LE → 37
   result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
+  result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
 
   console.log(`results: ${result}`);
 }
