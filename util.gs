@@ -85,7 +85,7 @@ function detectTime(result) {
     return a[1] + ':' + a[2] + ':' + a[3];
   }
   // 1時間23分のような日本語表記のタイム
-  a = result.match(/([0-5]{0,1}[0-9])時間([0-5][0-9])分/);
+  a = result.match(/([0-5]{0,1}[0-9])時間[ ]*([0-5]{0,1}[0-9])分/);
   if ( a != null) {
     console.log('match dt8');
     return a[1] + ':' + a[2] + ':00';
@@ -108,7 +108,7 @@ function rotateTimeStr(src) {
 
 function detectDistance(result) {
   // 6.2 マイル
-  a = result.match(/([0-9]+)\.([0-9]+)[ ]*マイル/);
+  a = result.match(/([0-9]+)\.([0-9]+)[ ]*(マイル|マイア)/);
   if ( a != null) {
     console.log(`match dd8 with ${a[0]}`);
     return mile2kiro(a[1] + '.' + a[2]);

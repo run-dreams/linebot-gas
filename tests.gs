@@ -907,9 +907,44 @@ NEMOTO
 朝の LSD。 10㌔走り
 ました。`;
 
+var sample35 = `O
+STRAVA
+ACHIJO
+O
+DONIWA
+HIKONARI
+NAKAZONE
+Yashio
+OZE
+GAKE
+Tokyogaikan Expwy
+TOGASAKI
+DOJO
+Joban Expwy
+Misato
+KI
+Nagareyama
+City Sports Park
+OYAGUCHI
+^*
+ランニング
+ペース
+Mizumoto
+12.4 マイア Doto Park 11:11 マイル
+KODE
+21-seikinomori
+Square
+Motoudo
+ASAH
+タイム
+2時間 19分
+GC
+MAT`;
+
 function newTest() {
   var result = '';
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
+  result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
 
   console.log(`results: ${result}`);
 }
@@ -950,6 +985,7 @@ function myTest() {
   result += detectTest('sample32', sample32, '00:58:31', '11.009'); // LE → 37
   result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
+  result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
 
   console.log(`results: ${result}`);
 }
