@@ -674,31 +674,7 @@ function getSummary(groupId) {
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
-  var runners = new Map();
-  for(i = 1; i < sheet.getLastRow(); i++) {
-    if(runners.has(records[i][0])) {
-      // 回数をカウントアップし記録を加算
-      values = runners.get(records[i][0]);
-      values.count++;
-      var distance = Number(values.distance);
-      values.distance = distance + Number(records[i][1]);
-      values.duration = timeMath.sum(values.duration, records[i][2]);
-      runners.set(records[i][0], values);
-    }
-    else {
-      // 初出はセットのみ
-      runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
-    }
-  }
-  // 一旦マップに集計した参加者毎の記録を結果として出力
-  for (let [key, value] of runners) {
-    if(value.count == 1) {
-      result += `${key}\t${value.distance}\t${value.duration}\n`;
-    }
-    else {
-      result += `${key}(${value.count})\t${value.distance}\t${value.duration}\n`;
-    }
-  }
+  result += makeResultList(records);
   // 計算式で集計された合計距離・走行時間と残り距離
   var summary = sheet.getRange(1,5,3,3).getDisplayValues();
   for(i = 1; i < 3; i++) {
@@ -724,9 +700,7 @@ function getPreviousSummary(groupId) {
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
-  for(i = 1; i < sheet.getLastRow(); i++) {
-    result += records[i][0] + '\t' + records[i][1] + '\t' + records[i][2] + '\n';
-  }
+  result += makeResultList(records);
   // 計算式で集計された合計距離・走行時間と残り距離
   var summary = sheet.getRange(1,5,3,3).getDisplayValues();
   for(i = 1; i < 3; i++) {
@@ -736,6 +710,36 @@ function getPreviousSummary(groupId) {
     return '記録なし';
   }
 
+  return result;
+}
+
+function makeResultList(records) {
+  var result = '';
+  var runners = new Map();
+  for(i = 1; i < records.length; i++) {
+    if(runners.has(records[i][0])) {
+      // 回数をカウントアップし記録を加算
+      values = runners.get(records[i][0]);
+      values.count++;
+      var distance = Number(values.distance);
+      values.distance = distance + Number(records[i][1]);
+      values.duration = timeMath.sum(values.duration, records[i][2]);
+      runners.set(records[i][0], values);
+    }
+    else {
+      // 初出はセットのみ
+      runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
+    }
+  }
+  // 一旦マップに集計した参加者毎の記録を結果として出力
+  for (let [key, value] of runners) {
+    if(value.count == 1) {
+      result += `${key}\t${value.distance}\t${value.duration}\n`;
+    }
+    else {
+      result += `${key}(${value.count})\t${value.distance}\t${value.duration}\n`;
+    }
+  }
   return result;
 }
 
