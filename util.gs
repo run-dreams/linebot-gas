@@ -10,7 +10,7 @@ function detectTime(result) {
   a = result.match(/([0-5]*[0-9]):([0-5][0-9])\.([0-9]{1,3})/);
   if ( a != null) {
     console.log('match dt1\'');
-    return a[1] + ':' + a[2] + '.' + a[3];
+    return '0:' + a[1] + ':' + a[2] + '.' + a[3];
   }
   // タイム
   // 01:36:08
