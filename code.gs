@@ -196,7 +196,7 @@ function doPost(e) {
 
 // HealthCheck用ダミーGETメソッド
 function doGet() {
-  return ContentService.createTextOutput(JSON.stringify('{"success":true}')).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify({"success":true})).setMimeType(ContentService.MimeType.JSON);
 }
 
 // HealthCheck invoke by scheduled trigger
