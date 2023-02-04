@@ -129,6 +129,10 @@ function doPost(e) {
               replyLine(sourcename, replyToken, getSummary(replyTo));
               break;
             }
+            if(messageText.trim().match(/^ヘルプ/)) {
+              replyLine(sourcename, replyToken, `https://www.run-dreams.com/linebothelp`);
+              break;
+            }
             replyToken = event.replyToken;
             if(messageText.trim().match(/^昨日の集計[\!]*/)) {
               replyLine(sourcename, replyToken, getPreviousSummary(replyTo));
