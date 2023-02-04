@@ -722,7 +722,8 @@ function makeResultList(records) {
       values = runners.get(records[i][0]);
       values.count++;
       var distance = Number(values.distance);
-      values.distance = distance + Number(records[i][1]);
+      // なぜか小数点以下がバグることがあるので合算する場合は小数点第二位にて切り詰め
+      values.distance = Number(distance + Number(records[i][1])).toFixed(2);
       values.duration = timeMath.sum(values.duration, records[i][2]);
       runners.set(records[i][0], values);
     }
