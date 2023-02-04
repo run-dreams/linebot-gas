@@ -35,7 +35,7 @@ function detectTime(result) {
   }
   // 36:08
   // タイム
-  a = result.match(/\n([0-5][0-9]):([0-5][0-9])\nタイム/);
+  a = result.match(/\n([0-5][0-9]):([0-5][0-9])\n[タイム|時間]/);
   if ( a != null) {
     console.log('match dt4');
     return '0:' + a[1] + ':' + a[2];
