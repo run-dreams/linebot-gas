@@ -941,11 +941,44 @@ ASAH
 GC
 MAT`;
 
+var sample36 = `10:46
+←
+荒川
+4:41
+ペース (分/km)
+18:48
+時間
+Google
+浦和区 ラン
+デバイス
+10
+L!!!
+S5
+「
+4.01
+距離(km)
+遅い
+全ランアクティビティを表示
+さいた。市
+○
+G
+22
+総上昇量 (m)
+※4 77%
+速い
+246
+fenix 7X Sapphire DUAL POWER
+10.46
+カロリー
+M
+6°
+4
+000`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
-  result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
-
+  result += detectTest('sample36', sample36, '0:18:48', '4.01');
+ 
   console.log(`results: ${result}`);
 }
 
@@ -986,6 +1019,7 @@ function myTest() {
   result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
   result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
+  result += detectTest('sample36', sample36, '0:18:48', '4.01');　// 改行して「時間」ラベル
 
   console.log(`results: ${result}`);
 }
