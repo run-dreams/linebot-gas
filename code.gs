@@ -158,7 +158,7 @@ function doPost(e) {
               replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4]));
               break;
             }
-            if(messageText.trim().match(/^取り消し[\!]*/)) {
+            if(messageText.trim().match(/^取り消し|取消し|取消|削除|とりけし[\!]*/)) {
               replyIgnoreResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
