@@ -975,9 +975,37 @@ M
 4
 000`;
 
+var sample37 = `DISP./ HR
+元
+LIGHT
+肉 7/3
+6:40 - 7:31.
+START/STOP
+EPSON
+7.03 1kTY
+00:4 105"
+5'50”/k/
+V
+-
+LAP`;
+
+var sample38 = `DISP./ HR
+LIGHT
+US
+6/5
+7:03 - 7:43
+START/STOP
+6.0 19 km
+..65.hE:00
+Ⓒ5'48"/km
+EPSON
+C
+LAP`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample36', sample36, '0:18:48', '4.01');
+  result += detectTest('sample38', sample38, '00:34:59', '6.019');
+  result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
  
   console.log(`results: ${result}`);
 }
@@ -1020,6 +1048,8 @@ function myTest() {
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
   result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
   result += detectTest('sample36', sample36, '0:18:48', '4.01');　// 改行して「時間」ラベル
+  result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
+  result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
 
   console.log(`results: ${result}`);
 }
