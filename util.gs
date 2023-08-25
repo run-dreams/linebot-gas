@@ -67,7 +67,7 @@ function detectTime(result) {
   }
   // 90.65:00
   // タイム
-  a = result.match(/([LEO0-9][LEO0-5])\.([LEO0-9][LEO0-5])[:]*([LEO0-9][LEO0-9])/);
+  a = result.match(/([LEO0-9h][LEO0-5h])\.([LEO0-9h][LEO0-5h])[:]*([LEO0-9h][LEO0-9h])/);
   if ( a != null) {
     console.log('match dt6r');
     return rotateTimeStr(a[3]) + ':' + rotateTimeStr(a[2]) + ':' + rotateTimeStr(a[1]);
@@ -97,8 +97,8 @@ function detectTime(result) {
 // 95 -> 56のように回転した状態で検出された時間を元に戻す。
 // 9 -> 6, 6 -> 9, L -> 1
 function rotateTimeStr(src) {
-  const rotate_str = 'LEO0123456789';
-  const normal_str = '1300123459786';
+  const rotate_str = 'LEO0123456789h';
+  const normal_str = '13001234597864';
   var result = '';
   for( i=src.length; i>0; i--) {
     result += normal_str.charAt(rotate_str.indexOf(src.charAt(i-1)));
@@ -133,6 +133,12 @@ function detectDistance(result) {
     console.log(`match dd4 with ${a[0]}`);
     return a[1] + '.' + a[2];
   }
+  // 8.0 14km EPSON Watchで01が 0 1になる問題
+  a = result.match(/([0-9]+)\.([0-9]+) ([0-9]+)[ ]*km\n/);
+  if ( a != null) {
+    console.log(`match dd5 with ${a[0]}`);
+    return a[1] + '.' + a[2] + a[3];
+  }
   // 3.70km
   a = [...result.matchAll(/([0-9]+)\.([0-9]+)[ ]*[kK][mM]/g)];
   if ( a.length > 0) {
@@ -144,12 +150,6 @@ function detectDistance(result) {
         return distance;
       }
     }
-  }
-  // 8.0 14km EPSON Watchで01が 0 1になる問題
-  a = result.match(/([0-9]+)\.([0-9]+) ([0-9]+)km\n/);
-  if ( a != null) {
-    console.log(`match dd5 with ${a[0]}`);
-    return a[1] + '.' + a[2] + a[3];
   }
   // 0.78
   a = [...result.matchAll(/([0-9]+)\.([0-9]+)\n/g)];
