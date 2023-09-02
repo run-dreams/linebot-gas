@@ -662,15 +662,30 @@ function getCurrentPeriod() {
   return dt;
 }
 
+function getNextPeriod() {
+  // 現在時刻から集計対象の日時を返す。
+  // 8:30 まで、当日の8:10を返す。
+  var dt = new Date();
+  if(dt.getHours() * 100 + dt.getMinutes() > 830) {
+    dt.setDate(dt.getDate() +1);
+  }
+  dt.setHours(8);
+  dt.setMinutes(10);
+  dt.setSeconds(0);
+
+  return dt;
+}
+
 function getSummary(groupId) {
 
   var ss = SpreadsheetApp.getActive()
   var sheet = ss.getSheetByName('24h Report');
-  var key = Utilities.formatDate(getCurrentPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var result = `${key} からの集計\n`;
+  var date_from = Utilities.formatDate(getCurrentPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var result = `${date_from} から24hの集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
