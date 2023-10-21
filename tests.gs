@@ -1002,10 +1002,51 @@ EPSON
 C
 LAP`;
 
+var sample39 = `百谷
+6:25
+概要
+南古谷 JR
+ナルド
+Google
+統計
+16
+川越市 ラン
+7.54km
+距離
+131 bpm
+平均心拍
+45:45
+合計タイム
+10月20日 @ 05:29
+いかがでしたか?
+遅い
+B
+川越グリ
+クロス 【PGM]
+ラン
+ラップ数
+一番最初に「いいね!｣しましょう
+グラフ
+16
+速い
+埼京線
+ta
+6:04/km
+平均ペース
+461
+合計カロリー
+• 4G 88
+rf
+15°
+...
+H
+ギア
+155
+メモの追加`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample38', sample38, '00:34:59', '6.019');
-  result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
+  result += detectTest('sample39', sample39, '0:45:45', '7.54');
  
   console.log(`results: ${result}`);
 }
@@ -1050,6 +1091,7 @@ function myTest() {
   result += detectTest('sample36', sample36, '0:18:48', '4.01');　// 改行して「時間」ラベル
   result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
   result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
+  result += detectTest('sample39', sample39, '0:45:45', '7.54');　// 改行して「合計タイム」ラベル
 
   console.log(`results: ${result}`);
 }
