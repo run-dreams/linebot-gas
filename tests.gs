@@ -1044,9 +1044,51 @@ H
 155
 メモの追加`;
 
+var sample40 = `レク
+-ack
+14:13
+<
+概要
+BU
+Google
+距離
+統計
+147 bpm
+平均心拍
+いかがでしたか?
+1:12:17
+合計タイム
+11,37km
+ORANJEZICHT
+自己評価
+トレイルラン
+ラップ数
+ディア・フェンス
+テール・ドレイル
+India Venster Trail
+遅い
+X 12月30日 @ 07:44
+□
+Table mountain trail and tar run
+B
+一番最初に「いいね!」しましょう
+グラフ
+●
+速い
+6:22/km
+平均ペース
+874
+合計カロリー
+凸
+□
+24°
+ギア
+メモの追加
+ヘルプ`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample39', sample39, '0:45:45', '7.54');
+  result += detectTest('sample40', sample40, '1:12:17', '11.37');
  
   console.log(`results: ${result}`);
 }
@@ -1092,6 +1134,7 @@ function myTest() {
   result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
   result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
   result += detectTest('sample39', sample39, '0:45:45', '7.54');　// 改行して「合計タイム」ラベル
+  result += detectTest('sample40', sample40, '1:12:17', '11.37'); // 距離km以下がカンマ区切り
 
   console.log(`results: ${result}`);
 }
