@@ -1086,9 +1086,51 @@ B
 メモの追加
 ヘルプ`;
 
+var sample41 = `18:53
+<
+概要
+M6
+GoogleOINT
+SEA
+5,01
+距離
+統計
+M61
+168bpm
+平均心拍
+x 1月4日 @ 18:08
+21:59
+合計タイム
+いかがでしたか?
+V&A ウォーターフロント
+V&A Waterfront
+MOUILLE POINT
+km
+ラン
+遅い
+ラップ数
+Cape Town promenade Run
+●●
+AI
+グラフ
+一番最初に「いいね!｣しましょう
+20
+速い
+4:24/km
+平均ペース
+339
+合計カロリー
+ml 5G 58
+ロ
+ギア
+1 Cabo E
+32°
+メモの追加
+9`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample40', sample40, '1:12:17', '11.37');
+  result += detectTest('sample41', sample41, '0:21:59', '5.01');
  
   console.log(`results: ${result}`);
 }
@@ -1135,6 +1177,7 @@ function myTest() {
   result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
   result += detectTest('sample39', sample39, '0:45:45', '7.54');　// 改行して「合計タイム」ラベル
   result += detectTest('sample40', sample40, '1:12:17', '11.37'); // 距離km以下がカンマ区切り
+  result += detectTest('sample41', sample41, '0:21:59', '5.01'); // ↑の追加パターン
 
   console.log(`results: ${result}`);
 }
