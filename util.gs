@@ -115,7 +115,7 @@ function detectDistance(result) {
   }
   // 7.67
   // 距離(km)
-  a = result.match(/([0-9]+)\.([0-9]+)\n(距離|キロメートル)/);
+  a = result.match(/([0-9]+)[\.,]([0-9]+)\n(距離|キロメートル)/);
   if ( a != null) {
     console.log(`match dd2 with ${a[0]}`);
     return a[1] + '.' + a[2];
