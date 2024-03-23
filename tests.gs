@@ -1128,9 +1128,47 @@ ml 5G 58
 メモの追加
 9`;
 
+var sample42 = `18:54 1
+<
+cistown CSTART e of
+TechniFINISH nd...
+Google
+Lap
+>>.
+2024/03/03(Sun) 18:41
+Jula Road
+Avg. Speed
+5.70km/h
+Time Gross
+Activities
+0:10:45
+P
+Races
+Data
+Duration
+0:10:43
+Steps
+1270
+Calories
+70 kcal
+HOME
+Dr
+Event
+100
+Graph
+Kazu
+Distance
+1.02km
+ELE. gain
+Om
+ELE. loss
+2m
+Team/Friend
+`
+
 function newTest() {
   var result = '';
-  result += detectTest('sample41', sample41, '0:21:59', '5.01');
+  result += detectTest('sample42', sample42, '0:10:43', '1.02');
  
   console.log(`results: ${result}`);
 }
@@ -1178,6 +1216,7 @@ function myTest() {
   result += detectTest('sample39', sample39, '0:45:45', '7.54');　// 改行して「合計タイム」ラベル
   result += detectTest('sample40', sample40, '1:12:17', '11.37'); // 距離km以下がカンマ区切り
   result += detectTest('sample41', sample41, '0:21:59', '5.01'); // ↑の追加パターン
+  result += detectTest('sample42', sample42, '0:10:43', '1.02'); // TATTA English
 
   console.log(`results: ${result}`);
 }

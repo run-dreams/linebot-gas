@@ -113,6 +113,13 @@ function detectDistance(result) {
     console.log(`match dd8 with ${a[0]}`);
     return mile2kiro(a[1] + '.' + a[2]);
   }
+  // Distance
+  // 1.02km
+  a = result.match(/Distance\n([0-9]+)[\.,]([0-9]+)/);
+  if ( a != null) {
+    console.log(`match dd9 with ${a[0]}`);
+    return a[1] + '.' + a[2];
+  }
   // 7.67
   // 距離(km)
   a = result.match(/([0-9]+)[\.,]([0-9]+)\n(距離|キロメートル)/);
