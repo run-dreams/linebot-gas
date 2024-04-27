@@ -281,6 +281,51 @@ function replyLineCorrect(sourcename, replyToken, strMessage, name, duration, di
    console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage)
 }
 
+function replyLineSetname(sourcename, replyToken, strMessage, name){
+
+  var tag = replyToken.substr(0,7);
+  var fillInText = '';
+  fillInText += `${tag}:名前設定\n`;
+  fillInText += `集計に表示される名前を入力してください。\n`;
+  fillInText += `氏名\t${name}`;
+
+  //Lineに送信するためのトークン
+  var strToken = CHANNEL_ACCESS_TOKEN;
+  var options =
+   {
+     "method"  : "post",
+     "payload" : JSON.stringify({
+       'messages': [{
+         'type': 'text',
+         'text': strMessage,
+         'quickReply': {
+           'items': [
+              {
+                'type': 'action', 
+                'action': {
+                  'type': 'postback',
+                  'data': `${tag}:名前設定`,
+                  'label': '名前を設定',
+                  'displayText': '名前を設定します。',
+                  "inputOption": "openKeyboard",
+                  "fillInText": fillInText
+                }
+              },
+            ]
+         }
+        }],
+       'replyToken' : replyToken,
+      }),
+     "headers" : {"Authorization" : "Bearer " + strToken, 
+       "Content-Type" : "application/json"
+     }
+ 
+   };
+ 
+   UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply",options);
+   console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage)
+}
+
 function replyAddResultInstruction(sourcename, replyToken){
    
   //Lineに送信するためのトークン
@@ -509,7 +554,7 @@ function addResult(tag, name, groupId, distance, duration) {
   return '記録しました'
 }
 
-// 修正
+// 「修正」コマンドを受けて記録を修正する。
 function updateResult(tag, name, distance, duration) {
 
   date = new Date();
@@ -520,6 +565,7 @@ function updateResult(tag, name, distance, duration) {
   const lastRow = sheet.getLastRow();
 
   for (var i = lastRow; i > lastRow - 20; i--) {
+    // 修正はだいたいすぐに行われるので、記録の下から20件だけ探す。
     if (sheet.getRange(i, 8).getValue() == tag) {
       var userId = sheet.getRange(i, 4).getValue();
       var orgName = getListedUserName(userId);
@@ -532,6 +578,31 @@ function updateResult(tag, name, distance, duration) {
       sheet.getRange(i, 10).setValue('更新しました');
       sheet.getRange(i, 12).setValue(new Date());
       return '更新しました';
+    }
+  }
+  return '記録がありません';
+
+}
+
+// 「名前設定」コマンドを受けて、名前を保存し記録を修正する。
+function updateResultName(tag, name) {
+
+  date = new Date();
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Analyze Log');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = lastRow; i > lastRow - 20; i--) {
+    // 修正はだいたいすぐに行われるので、記録の下から20件だけ探す。
+    if (sheet.getRange(i, 8).getValue() == tag) {
+      var userId = sheet.getRange(i, 4).getValue();
+      updateListedUserName(userId, name);
+      sheet.getRange(i, 5).setValue(name);
+      sheet.getRange(i, 10).setValue('名前を保存しました');
+      sheet.getRange(i, 12).setValue(new Date());
+      return '名前を保存しました';
     }
   }
   return '記録がありません';
@@ -766,6 +837,7 @@ function makeResultList(records) {
   return result;
 }
 
+// 「修正」でリストを表示し選択させる場合の返信を作成する。
 function replyUpdateResultInstruction(sourcename, replyToken, groupId){
 
   var ss = SpreadsheetApp.getActive()

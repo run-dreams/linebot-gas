@@ -142,6 +142,12 @@ function doPost(e) {
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
+            a = messageText.match(/^([0-9a-f]{7}):名前設定\n.*\n氏名[\s ]*(.*)/);
+            if(a != null){
+              // 名前設定
+              replyLine(sourcename, replyToken, updateResultName(a[1], a[2]));
+              break;
+            }
             a = messageText.match(/^([0-9a-f]{7}):修正\n氏名[\s ]*(.*)\n距離[\s ]*([0-9]+\.[0-9]+)\nタイム[\s ]*([0-9]+[:：][0-5][0-9][:：][0-5][0-9])/);
             if(a != null){
               // 修正
@@ -180,7 +186,11 @@ function doPost(e) {
               messageText += '距離' + String.fromCharCode(9) + (distance != null ? distance : '??') + String.fromCharCode(10);
               messageText += 'タイム' + String.fromCharCode(9) + (duration != null ? duration : '??');
               if(duration != null && distance != null && name != 'unknown') {
+                // 正常。修正の確認は不要。
                 replyLine(sourcename, replyToken, messageText);
+              } else　if(name == 'unknown') {
+                // 名前が未設定
+                replyLineSetname(sourcename, replyToken, messageText, name);
               } else {
                 replyLineCorrect(sourcename, replyToken, messageText, name, duration, distance);
               }
