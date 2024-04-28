@@ -754,6 +754,29 @@ function getNextPeriod() {
   return dt;
 }
 
+// 先月末日分の集計日時を返す　
+// 当月が2024年4月の場合、'2024-04-01 08:10:00' を返す
+function getLastMonthPeriod(targetDate) {
+  // 現在時刻から月で集計する対象範囲の開始日時を返す。
+  // 月初1日は8:30 まで、前月1日の8:10を返す。
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = targetDate;
+  }
+  if(dt.getDate() == 1 && dt.getHours() * 100 + dt.getMinutes() < 830) {
+    // ↑　８：３０が 830になる。8:30を過ぎているかの判定
+    // 1日の8:10より前だったら、前の月にする。
+    dt.setMonth(dt.getMonth() -1);
+  }
+  dt.setDate(1); // 当月ないし前月の1日
+  dt.setHours(8);// の、8:10以降を集計
+  dt.setMinutes(10);
+  dt.setSeconds(0);
+
+  return dt;
+}
+
+// グループの集計
 function getSummary(groupId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -773,6 +796,32 @@ function getSummary(groupId) {
   for(i = 1; i < 3; i++) {
     result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
   }
+  if(summary[1][1] == '0' && summary[1][2] == '0') {
+    return '記録なし';
+  }
+
+  return result;
+}
+
+// 個人の集計
+function getPersonalSummary(userId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('24h Report');
+  var date_from = Utilities.formatDate(getLastMonthPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var result = `今月（${date_from}から）の集計\n`;
+
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+
+  // queryで転写された対象月のラン記録を取得
+  var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
+  result += makeResultList(records);
+  // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
+  // TODO: ここでタイミングによりさまざまメッセージが書けそう。
+
+  var summary = sheet.getRange(1,5,3,3).getDisplayValues();
   if(summary[1][1] == '0' && summary[1][2] == '0') {
     return '記録なし';
   }
