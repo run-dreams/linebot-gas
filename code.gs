@@ -126,7 +126,14 @@ function doPost(e) {
             messageText = event.message.text;
             replyToken = event.replyToken;
             if(messageText.trim().match(/^集計[\!]*/)) {
-              replyLine(sourcename, replyToken, getSummary(replyTo));
+              if(type == 'group') {
+                // グループチャット
+                replyLine(sourcename, replyToken, getSummary(replyTo));
+              }
+              else {
+                // 個人チャット
+                replyLine(sourcename, replyToken, getPersonalSummary(replyTo));
+              }
               break;
             }
             if(messageText.trim().match(/^ヘルプ/)) {

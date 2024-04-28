@@ -1228,3 +1228,14 @@ function detectTest(name, result, duration, distance) {
 
   return (dd == distance && dt == duration ? 'o' : 'x');
 }
+
+// getLastMonthPeriod() のテスト
+function testLastMonthPeriod() {
+  console.log(getLastMonthPeriod(null));
+  var dt = new Date();
+  dt.setHours(6);
+  console.log(getLastMonthPeriod(dt));
+  dt.setDate(1);
+  dt.setHours(6);
+  console.log(getLastMonthPeriod(dt));
+}
