@@ -709,6 +709,22 @@ function recordUser(userId) {
   sheet.appendRow(values);
 }
 
+// 登録グループの名前を取得
+function getListedGroupName(groupId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Group List');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = 2; i <= lastRow; i++) {
+    if (sheet.getRange(i, 1).getValue() == groupId) {
+      return sheet.getRange(i, 2).getValue();
+    }
+  }
+  return 'unknown';
+
+}
 function getLastPeriod() {
   // 現在時刻から集計対象の日時（昨日の分）を返す。
   // 8:30 まで、一昨日の8:10を返す。
@@ -803,32 +819,7 @@ function getSummary(groupId) {
   return result;
 }
 
-// 個人の集計
-function getPersonalSummary(userId) {
-
-  var ss = SpreadsheetApp.getActive()
-  var sheet = ss.getSheetByName('24h Report');
-  var date_from = Utilities.formatDate(getLastMonthPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var result = `今月（${date_from}から）の集計\n`;
-
-  // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND K is null", -1)`);
-
-  // queryで転写された対象月のラン記録を取得
-  var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
-  result += makeResultList(records);
-  // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
-  // TODO: ここでタイミングによりさまざまメッセージが書けそう。
-
-  var summary = sheet.getRange(1,5,3,3).getDisplayValues();
-  if(summary[1][1] == '0' && summary[1][2] == '0') {
-    return '記録なし';
-  }
-
-  return result;
-}
-
+// 昨日の集計（グループ）
 function getPreviousSummary(groupId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -855,6 +846,7 @@ function getPreviousSummary(groupId) {
   return result;
 }
 
+// 集計結果リストを整形して返す
 function makeResultList(records) {
   var result = '';
   var runners = new Map();
@@ -883,6 +875,78 @@ function makeResultList(records) {
       result += `${key}(${value.count})\t${value.distance}\t${value.duration}\n`;
     }
   }
+  return result;
+}
+
+// 今月の集計（個人）
+function getPersonalSummary(userId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Monthly Report');
+  var date_from = Utilities.formatDate(getLastMonthPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var name = getListedUserName(userId);
+  var result = `${name}さんの今月の集計です。\n`;
+  
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND K is null group by C, E order by C desc", -1)`);
+
+  // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
+  // TODO: ここでタイミングによりさまざまメッセージが書けそう。
+
+  var summary = sheet.getRange(1,6,3,3).getDisplayValues();
+  if(summary[1][1] == '0.0' && summary[1][2] == '0') {
+    result　= '今月はまだ記録がありません！';
+  }
+  else {
+    result += `走った回数 ${summary[1][2]} 回\n`;
+    result += `合計距離 ${summary[1][1]}　km`;
+
+    // グループの集計・TOP3ランナーも表示
+    // queryで転写された対象月の所属グループ毎ラン記録を取得
+    var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
+    // result += makeResultList(records);
+    if(records[1][1] != '') {
+      // グループチャットでの記録があれば、ひとまず最初のチームのみ。
+      result += `\n\n`;
+      result += getMonthlySummary(records[1][0]);
+    }
+  }
+  
+  return result;
+}
+
+// 今月の集計（グループ）
+function getMonthlySummary(groupId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Monthly Report');
+  var date_from = Utilities.formatDate(getLastMonthPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
+  var result = `${getListedGroupName(groupId)} 今月の集計\n`;
+
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null group by D, E order by SUM(F) desc", -1)`);
+
+  // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
+  var summary = sheet.getRange(1,6,3,5).getDisplayValues();
+  if(summary[1][1] == '0.0' && summary[1][2] == '0') {
+    result　+= '今月はまだ記録がありません！';
+  }
+  else {
+    result += `走ったメンバー ${summary[1][4]} 人\n`;
+    result += `走った回数 ${summary[1][2]} 回\n`;
+    result += `合計距離 ${summary[1][1]} km\n`;
+
+    // queryで転写された対象月のラン記録ユーザ集計を取得しTOP3を表示
+    result += `TOP3\n`;
+    var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
+    for(i = 1; i < records.length && i <= 3; i++) {
+      //   runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
+      result += `${i}) ${records[i][1]}(${records[i][3]}) ${records[i][2]} km\n`;
+    }
+  }
+
   return result;
 }
 
