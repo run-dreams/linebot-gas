@@ -809,11 +809,14 @@ function getSummary(groupId) {
   result += makeResultList(records);
   // 計算式で集計された合計距離・走行時間と残り距離
   var summary = sheet.getRange(1,5,3,3).getDisplayValues();
-  for(i = 1; i < 3; i++) {
-    result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
+  if(summary[1][1] == '0' && summary[1][2] == '0:00:00') {
+    result += '今日はまだ記録がありません。\n';
+    result += `\n${getPreviousSummary(groupId)}`;
   }
-  if(summary[1][1] == '0' && summary[1][2] == '0') {
-    return '記録なし';
+  else {
+    for(i = 1; i < 3; i++) {
+      result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
+    }
   }
 
   return result;
@@ -836,17 +839,21 @@ function getPreviousSummary(groupId) {
   result += makeResultList(records);
   // 計算式で集計された合計距離・走行時間と残り距離
   var summary = sheet.getRange(1,5,3,3).getDisplayValues();
-  for(i = 1; i < 3; i++) {
-    result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
+  if(summary[1][1] == '0' && summary[1][2] == '0:00:00') {
+    result += '記録はありません。';
   }
-  if(summary[1][1] == '0' && summary[1][2] == '0') {
-    return '記録なし';
+  else {
+    for(i = 1; i < 3; i++) {
+      result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
+    }
   }
 
   return result;
 }
 
-// 集計結果リストを整形して返す
+// 集計結果リストを整形して返す。
+// 同じランナーが２回以上走った場合は回数を（）表記して1行にする。
+// 記録がない場合は、空文字列を返す。
 function makeResultList(records) {
   var result = '';
   var runners = new Map();
@@ -863,7 +870,10 @@ function makeResultList(records) {
     }
     else {
       // 初出はセットのみ
-      runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
+      // 名無しは抜き（記録がないまたは1件の場合、集計用固定セルの関係で空データが取得される）
+      if(records[i][0] != '') {
+        runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
+      }
     }
   }
   // 一旦マップに集計した参加者毎の記録を結果として出力

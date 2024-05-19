@@ -1239,3 +1239,23 @@ function testLastMonthPeriod() {
   dt.setHours(6);
   console.log(getLastMonthPeriod(dt));
 }
+
+// getPersonalSummary() のテスト
+function testPersonalSummary() {
+  console.log(getPersonalSummary("user-Id-in-the-sheet-for-development"));
+}
+
+// getMonthlySummary() のテスト
+function testMonthlySummary() {
+  console.log(getMonthlySummary("group-Id-in-the-sheet-for-development"));
+}
+
+// getSummary() のテスト
+function testGetSummary() {
+  console.log(getSummary('group-Id-in-the-sheet-for-development'));
+}
+
+// getPreviousSummary() のテスト
+function testGetPreviousSummary() {
+  console.log(getPreviousSummary('group-Id-in-the-sheet-for-development'));
+}
