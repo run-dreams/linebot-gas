@@ -1259,3 +1259,8 @@ function testGetSummary() {
 function testGetPreviousSummary() {
   console.log(getPreviousSummary('group-Id-in-the-sheet-for-development'));
 }
+
+// addResult() のテスト
+function testAddResult() {
+  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "user-Id-in-the-sheet-for-development"));
+}

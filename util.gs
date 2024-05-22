@@ -509,7 +509,7 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
 }
 
 // 追加
-function addResult(tag, name, groupId, distance, duration) {
+function addResult(tag, name, groupId, distance, duration, userId) {
   date = new Date();
 
   var ss = SpreadsheetApp.getActive()
@@ -529,6 +529,16 @@ function addResult(tag, name, groupId, distance, duration) {
         break;
       case "groupId":
         val = groupId;
+        break;
+      case "userId":
+        val = getListedUserId(name);
+        if(val == 'unknown') {
+          // TODO: 手入力で間違っている可能性もあるので、見つからない場合は運用者になんらか通知されるようにしたい。
+          Logger.log(`${tag}: 入力された名前(${name})が見つかりませんでした。記録を確認し、修正してください。`);
+        }
+        break;
+      case "note":
+        val = `${getListedUserName(userId)}さんが追加しました`;
         break;
       case "name":
         val = name;
@@ -640,6 +650,23 @@ function getListedUserName(userId) {
   for (var i = 2; i <= lastRow; i++) {
     if (sheet.getRange(i, 1).getValue() == userId) {
       return sheet.getRange(i, 2).getValue();
+    }
+  }
+  return 'unknown';
+
+}
+
+// 登録ユーザのIDを名前で取得
+function getListedUserId(name) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('User List');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = 2; i <= lastRow; i++) {
+    if (sheet.getRange(i, 2).getValue() == name) {
+      return sheet.getRange(i, 1).getValue();
     }
   }
   return 'unknown';
