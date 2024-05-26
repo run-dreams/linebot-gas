@@ -195,7 +195,7 @@ function doPost(e) {
               if(duration != null && distance != null && name != 'unknown') {
                 // 正常。修正の確認は不要。
                 replyLine(sourcename, replyToken, messageText);
-              } else　if(name == 'unknown') {
+              } else if(name == 'unknown') {
                 // 名前が未設定
                 replyLineSetname(sourcename, replyToken, messageText, name);
               } else {
@@ -206,6 +206,7 @@ function doPost(e) {
           default:
             break;
         }
+        break;
       case 'join':
         replyToken = event.replyToken;
         let groupName = getListedGroupName(groupId);
