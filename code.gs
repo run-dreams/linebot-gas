@@ -206,6 +206,18 @@ function doPost(e) {
           default:
             break;
         }
+      case 'join':
+        replyToken = event.replyToken;
+        let groupName = getListedGroupName(groupId);
+        if(groupName == 'unknown') {
+          recordGroup(groupId, sourcename);
+        }
+        let joinMessage = `Run Dreams公式アカウントを追加していただきありがとうございます！\n
+このアカウントは、グループチャットに投稿されたラン画像を認識して記録を集計するお手伝いをします。\n
+「ヘルプ」と入力していただくと、詳しい説明ページをご案内します。`;
+        replyLine(sourcename, replyToken, joinMessage);
+        Logger.log(`join to ${sourcename}(${groupId})`);
+        break;
       default:
         break;
     }
