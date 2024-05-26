@@ -692,6 +692,8 @@ function updateListedUserName(userId, name) {
 
 }
 
+// 記録するユーザの情報をUser Listシートに追加する。
+// 該当のユーザが公式アカウントをお友だちにしていない場合は名前がAPIで取得できないのと、公式記録としてユーザ名ではなく姓名を登録してもらっているため、ここではuserIdのみ登録する。
 function recordUser(userId) {
 
   var requestObj = JSON.parse('{}');
@@ -752,6 +754,53 @@ function getListedGroupName(groupId) {
   return 'unknown';
 
 }
+
+
+// 公式アカウントが追加されたグループチャットの情報をGroup Listシートに追加する。
+function recordGroup(groupId, groupName) {
+
+  var requestObj = JSON.parse('{}');
+
+  //  
+  // groupIdをスプレッドシートに追記
+  //
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Group List');
+
+  // ヘッダ行を取得
+  var headers = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
+
+  // ヘッダに対応するデータを取得
+  var values = [];
+  for (i in headers){
+    var header = headers[i];
+    var val = "";
+    switch(header) {
+      case "groupId":
+        val = groupId;
+        break;
+      case "displayName":
+        val = groupName;
+        break;
+      case "addDate":
+      case "updateDate":
+        val = new Date();
+        break;
+      default:
+        val = requestObj[header];
+        if (val == undefined) {
+          val = "";
+        }
+        break;
+    }
+    values.push(val);
+  }
+
+  // 行を追加
+  sheet.appendRow(values);
+}
+
 function getLastPeriod() {
   // 現在時刻から集計対象の日時（昨日の分）を返す。
   // 8:30 まで、一昨日の8:10を返す。
