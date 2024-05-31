@@ -1240,9 +1240,37 @@ function testLastMonthPeriod() {
   console.log(getLastMonthPeriod(dt));
 }
 
+// getLastMonthStart() のテスト
+function testLastMonthStart() {
+  console.log(`${getLastMonthStart(null)}`);
+  console.log('月ナカ夕方');
+  let dt = new Date();
+  dt.setMonth(3);
+  dt.setDate(10);
+  dt.setHours(17);
+  console.log(dt);
+  console.log(getLastMonthStart(dt));
+  console.log('月初日の早い時間');
+  dt = new Date();
+  dt.setMonth(3);
+  dt.setDate(1);
+  dt.setHours(6);
+  console.log(dt);
+  console.log(getLastMonthStart(dt));
+}
+
 // getPersonalSummary() のテスト
 function testPersonalSummary() {
   console.log(getPersonalSummary("user-Id-in-the-sheet-for-development"));
+}
+
+// getLastMonthSummaryPersonal() のテスト
+function testLastMonthlySummaryPersonal() {
+  console.log(getLastMonthSummaryPersonal("user-Id-in-the-sheet-for-development"));
+}
+// getLastMonthSummaryGroup() のテスト
+function testLastMonthlySummaryGroup() {
+  console.log(getLastMonthSummaryGroup("group-Id-in-the-sheet-for-development"));
 }
 
 // getMonthlySummary() のテスト

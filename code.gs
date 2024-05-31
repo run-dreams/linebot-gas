@@ -145,6 +145,18 @@ function doPost(e) {
               replyLine(sourcename, replyToken, getPreviousSummary(replyTo));
               break;
             }
+            if(messageText.trim().match(/^先月の集計[\!]*/)) {
+              if(type == 'group') {
+                // グループチャット
+                // TODO: 相談してから公開
+                // replyLine(sourcename, replyToken, getLastMonthSummaryGroup(replyTo));
+              }
+              else {
+                // 個人チャット
+                replyLine(sourcename, replyToken, getLastMonthSummaryPersonal(replyTo));
+              }
+              break;
+            }
             if(messageText.trim().match(/^修正[\!]*/)) {
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;
