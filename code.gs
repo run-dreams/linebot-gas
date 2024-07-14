@@ -195,6 +195,12 @@ function doPost(e) {
             var image = getContent(messageId);
             var obj = analyzeImage(image);
             var result = obj.responses[0].textAnnotations[0].description;
+            var records = detectSheet(result);
+            if(records != null) {
+              // 記録表の写メだった場合はメッセージを返して終了
+              replyLine(sourcename, replyToken, records);
+              break;
+            }
             var duration = detectTime(result);
             var distance = detectDistance(result);
             var name = getListedUserName(userId);
