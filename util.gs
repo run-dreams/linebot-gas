@@ -1,3 +1,24 @@
+// 記録表の写メか判定する。
+// TODO:読み取れれば、チーム名やメンバー、周回数を記録する。
+// TODO：記録フォームのUrlも返す。
+function detectSheet(result) {
+  // 最低限の判定
+  let a = result.match(/Run Dreams 第/);
+  if ( a == null) {
+    return null;
+  }
+  // 日数と年月日も読み取りを試みる
+  a = result.match(/Run Dreams 第(.*)日目([0-9]+)年([1]*[0-9])月([1-3]*[0-9])日/);
+  if ( a != null) {
+    console.log('detect sheet with date info.');
+    return `ナイスラン！
+リレーの記録表を受け取りました。
+${a[1]}日目 ${a[2]}年 ${a[3]}月 ${a[4]}日
+明日もよろしくお願いします！`;
+  }
+  console.log('detect sheet.');
+  return 'ナイスラン！\nリレーの記録表を受け取りました。';
+}
 
 function detectTime(result) {
   // 00:55:29.3

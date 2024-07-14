@@ -1292,3 +1292,33 @@ function testGetPreviousSummary() {
 function testAddResult() {
   console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "user-Id-in-the-sheet-for-development"));
 }
+
+// 記録表の写メか判定する。
+const sheetSample1 = `周回 あと
+ラップ
+Run Dreams 第1233日目2O24年7月6日(土)天気
+トータル
+備考
+距離
+1
+46
+5 分32秒
+時間 5分32秒
+651.0`;
+
+const sheetSample2 = `Run Dreams 第/Z32日目2024年7月5日(金)天气孔
+気温 18℃ 湿度 73%
+代表: 渋沢昭德
+周回
+あと
+ラップ
+1
+46
+5分/秒`;
+
+function testDetectSheet() {
+  console.log(detectSheet(sample1));
+  console.log(detectSheet(sheetSample1));
+  // 付加情報が読み取れなかった場合
+  console.log(detectSheet(sheetSample2));
+}
