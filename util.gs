@@ -922,7 +922,7 @@ function getSummary(groupId) {
   var result = `${date_from} から24hの集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND K is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
@@ -943,6 +943,7 @@ function getSummary(groupId) {
 }
 
 // 昨日の集計（グループ）
+// TODO: リレー分（記録表フォーム）の記録を合わせて表示できるようにするとよい。
 function getPreviousSummary(groupId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -952,7 +953,7 @@ function getPreviousSummary(groupId) {
   var result = `${date_from} から24hの集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND K is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();

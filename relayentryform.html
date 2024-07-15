@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リレー参加記録フォーム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            background-color: #f7f7f7;
+        }
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .form-row input,
+        .form-row button {
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-row .participant-input {
+            width: 120px;
+            margin-right: 10px;
+        }
+        .form-row .laps-input {
+            width: 50px;
+            margin-right: 10px;
+        }
+        .form-row button {
+            width: auto;
+            white-space: nowrap;
+        }
+        #modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        #modal.show {
+            display: block;
+        }
+        #modal button {
+            margin-top: 10px;
+            width: 100%;
+        }
+        @media (min-width: 600px) {
+            .form-row input,
+            .form-row button {
+                width: auto;
+                margin-right: 10px;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+    <style>
+        * { 
+          margin: 0; padding: 0; 
+          box-sizing: border-box;
+        }
+        html {
+          height: 100%;
+          width: 100%;
+        }
+        body{
+          position: absolute;
+          transform-origin: top left;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        window.onload = function(){
+          var scale = 1 / 0.4;
+          document.body.style.width = 100/scale+"%";
+          document.body.style.height = 100/scale+"%";
+          document.body.style.transform = "scale("+scale+")";
+        };
+        window.resize = function(){
+          var scale = 1 / 0.4;
+          document.body.style.width = 100/scale+"%";
+          document.body.style.height = 100/scale+"%";
+          document.body.style.transform = "scale("+scale+")";
+        };
+    </script>
+    <h1>リレー参加記録フォーム</h1>
+    <div id="form-container">
+        <div class="form-row">
+            <input list="participants" class="participant-input" placeholder="選択または入力">
+            <datalist id="participants">
+                <? for (var i = 0; i < participants.length; i++) { ?>
+                    <option value="<?= participants[i] ?>">
+                <? } ?>
+            </datalist>
+            <input type="number" class="laps-input" placeholder="周回数" maxlength="2">
+            <button type="button" onclick="addRow(this)">追加</button>
+        </div>
+    </div>
+    <button type="button" onclick="showModal()">確認</button>
+
+    <div id="modal">
+        <h2>確認</h2>
+        <ul id="confirmation-list"></ul>
+        <button type="button" onclick="submitForm()">送信</button>
+        <button type="button" onclick="hideModal()">閉じる</button>
+    </div>
+
+    <script>
+        function addRow(button) {
+            const formContainer = document.getElementById('form-container');
+            const newRow = document.createElement('div');
+            newRow.classList.add('form-row');
+
+            const participantInput = document.createElement('input');
+            participantInput.setAttribute('list', 'participants');
+            participantInput.classList.add('participant-input');
+            participantInput.placeholder = '選択または入力';
+
+            const lapsInput = document.createElement('input');
+            lapsInput.type = 'number';
+            lapsInput.classList.add('laps-input');
+            lapsInput.placeholder = '周回数';
+
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.textContent = '追加';
+            addButton.onclick = function() {
+                addRow(addButton);
+            };
+
+            button.textContent = '削除';
+            button.onclick = function() {
+                formContainer.removeChild(newRow);
+            };
+
+            newRow.appendChild(participantInput);
+            newRow.appendChild(lapsInput);
+            newRow.appendChild(addButton);
+            formContainer.appendChild(newRow);
+        }
+
+        function showModal() {
+            const confirmationList = document.getElementById('confirmation-list');
+            confirmationList.innerHTML = '';
+            const formRows = document.querySelectorAll('.form-row');
+            formRows.forEach(row => {
+                const name = row.querySelector('.participant-input').value;
+                const laps = row.querySelector('.laps-input').value;
+                if (name && laps) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${name}: ${laps}周`;
+                    confirmationList.appendChild(listItem);
+                }
+            });
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function hideModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function submitForm() {
+            const participants = [];
+            const formRows = document.querySelectorAll('.form-row');
+            formRows.forEach(row => {
+                const name = row.querySelector('.participant-input').value;
+                const laps = row.querySelector('.laps-input').value;
+                if (name && laps) {
+                    participants.push({ name, laps });
+                }
+            });
+
+            google.script.run.withSuccessHandler(function(response) {
+                alert(response.message);
+                hideModal();
+            }).submitParticipants("<?= groupId ?>", participants);
+        }
+    </script>
+
+</body>
+</html>
