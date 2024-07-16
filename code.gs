@@ -187,6 +187,12 @@ function doPost(e) {
               replyIgnoreResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
+            if(messageText.trim().match(/^記録[\!]*/)) {
+              // TODO: フォームが対応したら年月日もパラメータで渡す
+              var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
+              replyLine(sourcename, replyToken, 'こちらのフォームから記録をお願いします。\n' + formUrl);
+              break;
+            }
             break;
           case 'image':
             var messageId = event.message.id;
@@ -198,7 +204,9 @@ function doPost(e) {
             var records = detectSheet(result);
             if(records != null) {
               // 記録表の写メだった場合はメッセージを返して終了
-              replyLine(sourcename, replyToken, records);
+              // TODO: フォームが対応したら年月日もパラメータで渡す
+              var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
+              replyLine(sourcename, replyToken, records + '\n\nこちらのフォームから記録をお願いします。\n' + formUrl);
               break;
             }
             var duration = detectTime(result);
@@ -285,9 +293,11 @@ function getParticipantsFromSheet() {
 // TODO: すでに記録があるのに送信された場合は訂正とみなして差分を反映する。
 function submitParticipants(groupId, participants) {
   // 受け取った参加者データを1行ずつ取り出して処理
+  var result = "";
   participants.forEach(function(participant, index) {
     // ここでデータをスプレッドシートに保存するなどの処理を行う
     console.log(`${groupId} - 名前: ${participant.name}, 周回数: ${participant.laps}`);
+    result += `\n${participant.name} (${participant.laps})`
     var distance = participant.laps * 923.2;
     if (index === 0) {
       // 先頭の参加者は１周目とみなし、ショートコースの差分を差し引く。（別所沼ルール）
@@ -296,6 +306,8 @@ function submitParticipants(groupId, participants) {
     // TODO: 会場も記録されるようにする。会場ごとに周回の距離も異なる。
     addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, "別所沼公園", "dummy");
   });
+
+  sendLine(groupId, `リレー参加記録フォームからの登録を記録しました。${result}`);
 
   return {status: 'success', message: '送信が完了しました'};
 }
