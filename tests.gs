@@ -1290,7 +1290,8 @@ function testGetPreviousSummary() {
 
 // addResult() のテスト
 function testAddResult() {
-  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "user-Id-in-the-sheet-for-development"));
+  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "", "",  "user-Id-in-the-sheet-for-development"));
+  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "", "6", "別所沼公園",  "user-Id-in-the-sheet-for-development"));
 }
 
 // 記録表の写メか判定する。
@@ -1321,4 +1322,22 @@ function testDetectSheet() {
   console.log(detectSheet(sheetSample1));
   // 付加情報が読み取れなかった場合
   console.log(detectSheet(sheetSample2));
+}
+
+function testSubmitParticipants() {
+  // テスト用のparticipantsリストを生成
+  var participants = [
+    {name: "山田 太郎", laps: 5},
+    {name: "浦和うなこ", laps: 1},
+    {name: "田中 花子", laps: 3},
+    {name: "鈴木 一郎", laps: 7}
+  ];
+
+  // submitParticipants関数を呼び出してテスト
+  var result = submitParticipants("group-Id-in-the-sheet-for-development", participants);
+  console.log(result);
+}
+
+function testGetParticipantsFromSheet() {
+  console.log(getParticipantsFromSheet());
 }

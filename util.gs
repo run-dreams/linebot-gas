@@ -530,7 +530,7 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
 }
 
 // 追加
-function addResult(tag, name, groupId, distance, duration, userId) {
+function addResult(tag, name, groupId, distance, duration, laps, venue, userId) {
   date = new Date();
 
   var ss = SpreadsheetApp.getActive()
@@ -569,6 +569,12 @@ function addResult(tag, name, groupId, distance, duration, userId) {
         break;
       case "duration":
         val = duration;
+        break;
+      case "laps":
+        val = laps;
+        break;
+      case "venue":
+        val = venue;
         break;
       case "tag":
         val = tag;
@@ -922,7 +928,7 @@ function getSummary(groupId) {
   var result = `${date_from} から24hの集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND M is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
@@ -943,6 +949,7 @@ function getSummary(groupId) {
 }
 
 // 昨日の集計（グループ）
+// TODO: リレー分（記録表フォーム）の記録を合わせて表示できるようにするとよい。
 function getPreviousSummary(groupId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -952,7 +959,7 @@ function getPreviousSummary(groupId) {
   var result = `${date_from} から24hの集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND M is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
@@ -1019,7 +1026,7 @@ function getPersonalSummary(userId) {
   var result = `${name}さんの今月の集計です。\n`;
   
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND K is null group by C, E order by C desc", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND M is null group by C, E order by C desc", -1)`);
 
   // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
   // TODO: ここでタイミングによりさまざまメッセージが書けそう。
@@ -1056,7 +1063,7 @@ function getMonthlySummary(groupId) {
   var result = `${getListedGroupName(groupId)} 今月の集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null group by D, E order by SUM(F) desc", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null group by D, E order by SUM(F) desc", -1)`);
 
   // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
   var summary = sheet.getRange(1,6,3,5).getDisplayValues();
@@ -1091,7 +1098,7 @@ function getLastMonthSummaryPersonal(userId) {
   var result = `${name}さんの先月の集計です。\n`;
   
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND K is null group by C, E order by C desc", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND M is null group by C, E order by C desc", -1)`);
 
   // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
   // TODO: ここでタイミングによりさまざまメッセージが書けそう。
@@ -1128,7 +1135,7 @@ function getLastMonthSummaryGroup(groupId) {
   var result = `${getListedGroupName(groupId)} 先月の集計\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null group by D, E order by SUM(F) desc", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null group by D, E order by SUM(F) desc", -1)`);
 
   // 計算式で集計された合計距離・走行時間と残り距離が0なら「記録なし」を表示
   var summary = sheet.getRange(1,6,3,5).getDisplayValues();
@@ -1161,7 +1168,7 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
   var result = `${key} からの記録\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G, H WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, H WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null AND H is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
@@ -1211,6 +1218,7 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
    console.log('reply to ' + sourcename + '「修正」')
 }
 
+// 「取り消し」でリストを表示し選択させる場合の返信を作成する。
 function replyIgnoreResultInstruction(sourcename, replyToken, groupId){
 
   var ss = SpreadsheetApp.getActive()
@@ -1219,7 +1227,7 @@ function replyIgnoreResultInstruction(sourcename, replyToken, groupId){
   var result = `${key} からの記録\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:K,"SELECT E, F, G, H WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND K is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, J WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null and H is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
