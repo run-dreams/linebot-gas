@@ -180,7 +180,7 @@ function doPost(e) {
             a = messageText.match(/^([0-9a-f]{7}):追加\n氏名[\s ]*(.*)\n距離[\s ]*([0-9]+\.[0-9]+)\nタイム[\s ]*([0-9]+[:：][0-5][0-9][:：][0-5][0-9])/);
             if(a != null){
               // 追加
-              replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4].replaceAll('：',':')),userId);
+              replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4].replaceAll('：',':')),　"", "", userId);
               break;
             }
             if(messageText.trim().match(/^取り消し|取消し|取消|削除|とりけし[\!]*/)) {
@@ -293,7 +293,8 @@ function submitParticipants(groupId, participants) {
       // 先頭の参加者は１周目とみなし、ショートコースの差分を差し引く。（別所沼ルール）
       distance -= 272.2;
     }
-    addResult("tag", participant.name, groupId, distance/1000, "", "dummy");
+    // TODO: 会場も記録されるようにする。会場ごとに周回の距離も異なる。
+    addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, "別所沼公園", "dummy");
   });
 
   return {status: 'success', message: '送信が完了しました'};

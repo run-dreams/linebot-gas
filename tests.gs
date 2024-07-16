@@ -1290,7 +1290,8 @@ function testGetPreviousSummary() {
 
 // addResult() のテスト
 function testAddResult() {
-  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "user-Id-in-the-sheet-for-development"));
+  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "", "",  "user-Id-in-the-sheet-for-development"));
+  console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "", "6", "別所沼公園",  "user-Id-in-the-sheet-for-development"));
 }
 
 // 記録表の写メか判定する。
