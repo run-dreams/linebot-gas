@@ -1178,7 +1178,9 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
     if(records[i][0] == '') {
       continue;
     }
-    result += `${i}. ${records[i][0]}\t${records[i][1]}\t${records[i][2]}\n`;
+    var distance = records[i][1] != '' ? records[i][1] : '??'
+    var duration = records[i][2] != '' ? records[i][2] : '??'
+    result += `${i}. ${records[i][0]}\t${distance}\t${duration}\n`;
     items.push(
       {
         'type': 'action', 
@@ -1188,7 +1190,7 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
           'label': `${i}. ${records[i][0]}`,
           'displayText': `${i}. ${records[i][0]} の記録を修正します。`,
           "inputOption": "openKeyboard",
-          "fillInText": `${records[i][3]}:修正\n氏名\t${records[i][0]}\n距離\t${records[i][1]}\nタイム\t${records[i][2]}`
+          "fillInText": `${records[i][3]}:修正\n氏名\t${records[i][0]}\n距離\t${distance != '??' ? distance : '0.00'}\nタイム\t${duration != '??' ? duration : '0:00:00'}`
         }
       });
   }
