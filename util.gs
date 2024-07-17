@@ -603,7 +603,7 @@ function updateResult(tag, name, distance, duration) {
 
   for (var i = lastRow; i > lastRow - 20; i--) {
     // 修正はだいたいすぐに行われるので、記録の下から20件だけ探す。
-    if (sheet.getRange(i, 8).getValue() == tag) {
+    if (sheet.getRange(i, 10).getValue() == tag) {
       var userId = sheet.getRange(i, 4).getValue();
       var orgName = getListedUserName(userId);
       if (orgName == 'unknown') {
@@ -612,8 +612,8 @@ function updateResult(tag, name, distance, duration) {
       sheet.getRange(i, 5).setValue(name);
       sheet.getRange(i, 6).setValue(distance);
       sheet.getRange(i, 7).setValue(duration);
-      sheet.getRange(i, 10).setValue('更新しました');
-      sheet.getRange(i, 12).setValue(new Date());
+      sheet.getRange(i, 12).setValue('更新しました');
+      sheet.getRange(i, 14).setValue(new Date());
       return '更新しました';
     }
   }
@@ -633,12 +633,12 @@ function updateResultName(tag, name) {
 
   for (var i = lastRow; i > lastRow - 20; i--) {
     // 修正はだいたいすぐに行われるので、記録の下から20件だけ探す。
-    if (sheet.getRange(i, 8).getValue() == tag) {
+    if (sheet.getRange(i, 10).getValue() == tag) {
       var userId = sheet.getRange(i, 4).getValue();
       updateListedUserName(userId, name);
       sheet.getRange(i, 5).setValue(name);
-      sheet.getRange(i, 10).setValue('名前を保存しました');
-      sheet.getRange(i, 12).setValue(new Date());
+      sheet.getRange(i, 12).setValue('名前を保存しました');
+      sheet.getRange(i, 14).setValue(new Date());
       return '名前を保存しました';
     }
   }
@@ -657,8 +657,8 @@ function ignoreResult(tag) {
   const lastRow = sheet.getLastRow();
 
   for (var i = lastRow; i > lastRow - 20; i--) {
-    if (sheet.getRange(i, 8).getValue() == tag) {
-      sheet.getRange(i, 11).setValue('取り消し');
+    if (sheet.getRange(i, 10).getValue() == tag) {
+      sheet.getRange(i, 13).setValue('取り消し');
       return '取り消しました';
     }
   }
@@ -1168,7 +1168,7 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
   var result = `${key} からの記録\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, H WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null AND H is null", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, J WHERE A > datetime '${key}' AND C = '${groupId}' AND (F is not null OR G is not null) AND M is null AND H is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
