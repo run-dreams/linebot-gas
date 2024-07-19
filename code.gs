@@ -205,6 +205,7 @@ function doPost(e) {
             var records = detectSheet(result);
             if(records != null) {
               // 記録表の写メだった場合はメッセージを返して終了
+              recordResult(event, result, JSON.stringify(obj), '', '');
               // TODO: フォームが対応したら年月日もパラメータで渡す
               var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
               replyLine(sourcename, replyToken, records + '\n\nこちらのフォームから記録をお願いします。\n' + formUrl);
