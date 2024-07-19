@@ -183,7 +183,8 @@ function doPost(e) {
               replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4].replaceAll('：',':')),　"", "", userId);
               break;
             }
-            if(messageText.trim().match(/^取り消し|取消し|取消|削除|とりけし[\!]*/)) {
+            if(messageText.trim().match(/^取り消し|^取消し|^取消|^削除|^とりけし[\!]*/)) {
+              // 取り消し
               replyIgnoreResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
