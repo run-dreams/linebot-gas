@@ -191,7 +191,8 @@ function doPost(e) {
             if(messageText.trim().match(/^記録[\!]*/)) {
               // TODO: フォームが対応したら年月日もパラメータで渡す
               var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
-              replyLine(sourcename, replyToken, 'こちらのフォームから記録をお願いします。\n' + formUrl);
+              var note = '\n\n登録後、「集計」で記録を確認してください。'
+              replyLine(sourcename, replyToken, 'こちらのフォームから記録をお願いします。\n' + formUrl + note);
               break;
             }
             break;
@@ -208,7 +209,8 @@ function doPost(e) {
               recordResult(event, result, JSON.stringify(obj), '', '');
               // TODO: フォームが対応したら年月日もパラメータで渡す
               var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
-              replyLine(sourcename, replyToken, records + '\n\nこちらのフォームから記録をお願いします。\n' + formUrl);
+              var note = '\n\n登録後、「集計」で記録を確認してください。'
+              replyLine(sourcename, replyToken, records + '\n\nこちらのフォームから記録をお願いします。\n' + formUrl + note);
               break;
             }
             var duration = detectTime(result);
@@ -309,7 +311,7 @@ function submitParticipants(groupId, participants) {
     addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, "別所沼公園", "dummy");
   });
 
-  sendLine(groupId, `リレー参加記録フォームからの登録を記録しました。${result}`);
+  console.log(`${groupId}\nリレー参加記録フォームからの登録を記録しました。\n${result}`);
 
   return {status: 'success', message: '送信が完了しました'};
 }
