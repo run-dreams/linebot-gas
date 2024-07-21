@@ -1288,6 +1288,16 @@ function testGetPreviousSummary() {
   console.log(getPreviousSummary('group-Id-in-the-sheet-for-development'));
 }
 
+// getPreviousOuterSummary() のテスト
+function testGetPreviousOuterSummary() {
+  console.log(getPreviousOuterSummary('group-Id-in-the-sheet-for-development'));
+}
+
+// getOuterSummary() のテスト
+function testGetOuterSummary() {
+  console.log(getOuterSummary('group-Id-in-the-sheet-for-development'));
+}
+
 // addResult() のテスト
 function testAddResult() {
   console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "", "",  "user-Id-in-the-sheet-for-development"));
@@ -1338,6 +1348,12 @@ function testSubmitParticipants() {
   console.log(result);
 }
 
+// 記録フォームに表示する参加者候補リストを作成
 function testGetParticipantsFromSheet() {
   console.log(getParticipantsFromSheet());
+}
+
+// リレーの集計
+function testgetRelaySummary() {
+  console.log(getRelaySummary('group-Id-in-the-sheet-for-development'));
 }
