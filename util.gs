@@ -845,13 +845,14 @@ function getLastPeriod() {
   return dt;
 }
 
-function getCurrentPeriod() {
-  // 現在時刻から集計対象の日時を返す。
-  // 8:30 まで、前日の8:10を返す。
+function getCurrentPeriod(groupId, targetDate) {
+  // 指定の時刻から集計対象の開始日時を返す。
+  // TODO: 前日の8:10を返すがgroupIdごとに異なると想定されるのでの今後対応。
   var dt = new Date();
-  if(dt.getHours() * 100 + dt.getMinutes() < 830) {
-    dt.setDate(dt.getDate() -1);
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
+  dt.setDate(dt.getDate() -1);
   dt.setHours(8);
   dt.setMinutes(10);
   dt.setSeconds(0);
@@ -859,12 +860,12 @@ function getCurrentPeriod() {
   return dt;
 }
 
-function getNextPeriod() {
-  // 現在時刻から集計対象の日時を返す。
-  // 8:30 まで、当日の8:10を返す。
+function getNextPeriod(groupId, targetDate) {
+  // 指定の時刻から集計対象の終了日時を返す。
+  // TODO: 当日の8:10を返すがgroupIdごとに異なると想定されるのでの今後対応。
   var dt = new Date();
-  if(dt.getHours() * 100 + dt.getMinutes() > 830) {
-    dt.setDate(dt.getDate() +1);
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
   dt.setHours(8);
   dt.setMinutes(10);
@@ -880,7 +881,7 @@ function getLastMonthPeriod(targetDate) {
   // 月初1日は8:30 まで、前月1日の8:10を返す。
   var dt = new Date();
   if(targetDate != null) {
-    dt = targetDate;
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
   if(dt.getDate() == 1 && dt.getHours() * 100 + dt.getMinutes() < 830) {
     // ↑　８：３０が 830になる。8:30を過ぎているかの判定
@@ -902,7 +903,7 @@ function getLastMonthStart(targetDate) {
   // 月初1日は8:30 まで、前月1日の8:10を返す。
   var dt = new Date();
   if(targetDate != null) {
-    dt = targetDate;
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
   dt.setMonth(dt.getMonth() -1);
   if(dt.getDate() == 1 && dt.getHours() * 100 + dt.getMinutes() < 830) {
@@ -920,61 +921,139 @@ function getLastMonthStart(targetDate) {
 
 // グループの集計
 function getSummary(groupId) {
+  var today = new Date();
+  var tommorow = new Date();
+  tommorow.setDate(today.getDate()+1);
+  var relayResult = getRelaySummary(groupId, today);
+  var outerResult = getOuterSummary(groupId, today);
+  var tommorowOuterResult = getOuterSummary(groupId, tommorow);
+  var result = `${Utilities.formatDate(today, "JST", "yyyy年MM月dd日")}`;
+  if (relayResult.participants > 0 && outerResult.participants > 0) {
+    // 小数点以下の桁数を2桁に丸める
+    var totalDistance = (parseFloat(relayResult.totaldistance) + parseFloat(outerResult.totaldistance)).toFixed(2);
+    result += `\t${totalDistance} km`;
+  }
+  result += '\n'
+  // リレーの記録
+  if(relayResult.participants > 0) {
+    result += `${relayResult.summary}\n\n`;
+  }
+  // 会場外の記録
+  if(outerResult.participants > 0) {
+    result += `${outerResult.summary}\n`;
+    if(relayResult.participants == 0) {
+      result += `残り\t${outerResult.remainingdistance}\n`;
+    }
+    result += '\n'
+  }
+  // 明日に向けての記録
+  if(tommorowOuterResult.participants > 0) {
+    result += `${Utilities.formatDate(tommorow, "JST", "yyyy年MM月dd日")}\n`;
+    result += `${tommorowOuterResult.summary}\n残り${tommorowOuterResult.remainingdistance}\n`;
+  }
+  return result;
+}
 
+// リレー外のグループ集計
+function getOuterSummary(groupId, targetDate) {
+
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
   var ss = SpreadsheetApp.getActive()
   var sheet = ss.getSheetByName('24h Report');
-  var date_from = Utilities.formatDate(getCurrentPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var date_to = Utilities.formatDate(getNextPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var result = `${date_from} から24hの集計\n`;
+  var date_from = Utilities.formatDate(getCurrentPeriod(groupId, targetDate), "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(getNextPeriod(groupId, targetDate), "JST", "yyyy-MM-dd HH:mm:ss");
+  var result = `会場外（〜8:10）\n`;
 
   // queryの条件（抽出対象期間）を更新
   sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND M is null", -1)`);
 
   // queryで転写された24時間以内のラン記録を取得
   var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
-  result += makeResultList(records);
+  var resultList = makeResultList(records);
+  var lines = resultList.split('\n');
+  var participants = lines.length -1;
+  if(resultList == '') {
+    participants = 0;
+  }
+  result += resultList;
   // 計算式で集計された合計距離・走行時間と残り距離
   var summary = sheet.getRange(1,5,3,3).getDisplayValues();
-  if(summary[1][1] == '0' && summary[1][2] == '0:00:00') {
+  var totalTime = summary[1][2];
+  var totalDistance = summary[1][1];
+  var remainingDistance = summary[2][1];
+  if(totalDistance == '0' && totalTime == '0:00:00') {
     result += '今日はまだ記録がありません。\n';
-    result += `\n${getPreviousSummary(groupId)}`;
   }
   else {
-    for(i = 1; i < 3; i++) {
-      result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
-    }
+    result += `計\t${totalDistance}\t${totalTime}`;
   }
 
-  return result;
+  return {
+    participants: participants,
+    totaldistance: totalDistance,
+    totaltime: totalTime,
+    remainingdistance: remainingDistance,
+    summary: result
+  };
+}
+
+// リレーの集計
+function getRelaySummary(groupId, targetDate) {
+
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('24h Report');
+  var date_from = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 00:00:00");
+  var date_to = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 23:59:59");
+  var result = `リレー参加者（周回数）\n`;
+
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, H WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null) AND M is null AND H is not null", -1)`);
+
+  // queryで転写された当日のリレー参加者記録を取得
+  var records = sheet.getRange(2,1,sheet.getLastRow()-1,4).getDisplayValues();
+  var participants = 0;
+  records.forEach(function(row) {
+    if(row[0] != '') {
+      result += `${row[0]}\t(${row[3]})\n`;
+      participants++;
+    }
+  });
+
+  // 計算式で集計された合計距離
+  var summary = sheet.getRange(1,5,3,3).getDisplayValues();
+  var totalTime = summary[1][2];
+  var totalDistance = summary[1][1];
+  if(totalDistance == '0' && totalTime == '0:00:00') {
+    result = '今日はまだ記録がありません。\n';
+  }
+  else {
+    result += `計\t${totalDistance}`;
+  }
+
+  return {
+    participants: participants,
+    totaldistance: totalDistance,
+    totaltime: totalTime,
+    summary: result
+  };
 }
 
 // 昨日の集計（グループ）
 // TODO: リレー分（記録表フォーム）の記録を合わせて表示できるようにするとよい。
 function getPreviousSummary(groupId) {
-
-  var ss = SpreadsheetApp.getActive()
-  var sheet = ss.getSheetByName('24h Report');
-  var date_from = Utilities.formatDate(getLastPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var date_to = Utilities.formatDate(getCurrentPeriod(), "JST", "yyyy-MM-dd HH:mm:ss");
-  var result = `${date_from} から24hの集計\n`;
-
-  // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null AND G is not null) AND M is null", -1)`);
-
-  // queryで転写された24時間以内のラン記録を取得
-  var records = sheet.getRange(1,1,sheet.getLastRow(),3).getDisplayValues();
-  result += makeResultList(records);
-  // 計算式で集計された合計距離・走行時間と残り距離
-  var summary = sheet.getRange(1,5,3,3).getDisplayValues();
-  if(summary[1][1] == '0' && summary[1][2] == '0:00:00') {
-    result += '記録はありません。';
-  }
-  else {
-    for(i = 1; i < 3; i++) {
-      result += '\n' + summary[i][0] + '\t' + summary[i][1] + '\t' + summary[i][2];
-    }
-  }
-
+  var targetDate = new Date();
+  targetDate.setDate(targetDate.getDate()-1);
+  var result = `${Utilities.formatDate(targetDate, "JST", "yyyy年MM月dd日")}\n`;
+  var previousResult = getOuterSummary(groupId, targetDate);
+  // 会場外の記録
+  result += `${previousResult.summary}\n\n`;
   return result;
 }
 

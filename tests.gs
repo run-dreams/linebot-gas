@@ -1288,6 +1288,38 @@ function testGetPreviousSummary() {
   console.log(getPreviousSummary('group-Id-in-the-sheet-for-development'));
 }
 
+// getCurrentPeriod() のテスト
+function testGetCurrentPeriod() {
+  var today = new Date();
+  console.log(today);
+  console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', yesterday));
+}
+
+// getNextPeriod() のテスト
+function testGetNextPeriod() {
+  var today = new Date();
+  console.log(today);
+  console.log(getNextPeriod('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getNextPeriod('group-Id-in-the-sheet-for-development', yesterday));
+}
+
+// getOuterSummary() のテスト
+function testGetOuterSummary() {
+  var today = new Date();
+  console.log(getOuterSummary('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getOuterSummary('group-Id-in-the-sheet-for-development', yesterday));
+}
+
 // addResult() のテスト
 function testAddResult() {
   console.log(addResult("tag", "浦和うなこ", "group-Id-in-the-sheet-for-development", "10.02", "1:23:45", "", "",  "user-Id-in-the-sheet-for-development"));
@@ -1338,6 +1370,17 @@ function testSubmitParticipants() {
   console.log(result);
 }
 
+// 記録フォームに表示する参加者候補リストを作成
 function testGetParticipantsFromSheet() {
   console.log(getParticipantsFromSheet());
+}
+
+// リレーの集計
+function testgetRelaySummary() {
+  var today = new Date();
+  console.log(getRelaySummary('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getRelaySummary('group-Id-in-the-sheet-for-development', yesterday));
 }
