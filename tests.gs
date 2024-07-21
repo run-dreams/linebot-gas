@@ -1288,14 +1288,36 @@ function testGetPreviousSummary() {
   console.log(getPreviousSummary('group-Id-in-the-sheet-for-development'));
 }
 
-// getPreviousOuterSummary() のテスト
-function testGetPreviousOuterSummary() {
-  console.log(getPreviousOuterSummary('group-Id-in-the-sheet-for-development'));
+// getCurrentPeriod() のテスト
+function testGetCurrentPeriod() {
+  var today = new Date();
+  console.log(today);
+  console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', yesterday));
+}
+
+// getNextPeriod() のテスト
+function testGetNextPeriod() {
+  var today = new Date();
+  console.log(today);
+  console.log(getNextPeriod('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getNextPeriod('group-Id-in-the-sheet-for-development', yesterday));
 }
 
 // getOuterSummary() のテスト
 function testGetOuterSummary() {
-  console.log(getOuterSummary('group-Id-in-the-sheet-for-development'));
+  var today = new Date();
+  console.log(getOuterSummary('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getOuterSummary('group-Id-in-the-sheet-for-development', yesterday));
 }
 
 // addResult() のテスト
@@ -1355,5 +1377,10 @@ function testGetParticipantsFromSheet() {
 
 // リレーの集計
 function testgetRelaySummary() {
-  console.log(getRelaySummary('group-Id-in-the-sheet-for-development'));
+  var today = new Date();
+  console.log(getRelaySummary('group-Id-in-the-sheet-for-development', today));
+  var yesterday = new Date();
+  yesterday.setDate(today.getDate()-1);
+  console.log(yesterday);
+  console.log(getRelaySummary('group-Id-in-the-sheet-for-development', yesterday));
 }
