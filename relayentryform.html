@@ -10,6 +10,9 @@
             padding: 10px;
             background-color: #f7f7f7;
         }
+        h1 {
+            margin-bottom: 20px;
+        }
         .form-row {
             display: flex;
             align-items: center;
@@ -64,10 +67,23 @@
         }
         #response-message {
             margin-top: 20px;
+            margin-bottom: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #f0f0f0;
             display: none;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .instructions ul {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
         }
     </style>
     <style>
@@ -101,17 +117,26 @@
         };
     </script>
     <h1>リレー参加記録フォーム</h1>
+
+    <div id="response-message"></div>
+
     <div id="form-container">
+        <? for (var i = 0; i < existingRecords.length; i++) { ?>
         <div class="form-row">
-            <input list="participants" class="participant-input" placeholder="選択または入力">
+            <input list="participants" class="participant-input" value="<?= existingRecords[i].name ?>" placeholder="選択または入力">
             <datalist id="participants">
-                <? for (var i = 0; i < participants.length; i++) { ?>
-                    <option value="<?= participants[i] ?>">
+                <? for (var j = 0; j < participants.length; j++) { ?>
+                    <option value="<?= participants[j] ?>">
                 <? } ?>
             </datalist>
-            <input type="number" class="laps-input" placeholder="周回数" maxlength="2">
+            <input type="number" class="laps-input" value="<?= existingRecords[i].laps ?>" placeholder="周回数" maxlength="2">
+            <? if (i === existingRecords.length - 1) { ?>
             <button type="button" onclick="addRow(this)">追加</button>
+            <? } else { ?>
+            <button type="button" onclick="removeRow(this)">削除</button>
+            <? } ?>
         </div>
+        <? } ?>
     </div>
     <button type="button" onclick="showModal()">確認</button>
 
@@ -122,7 +147,13 @@
         <button type="button" onclick="hideModal()">閉じる</button>
     </div>
 
-    <div id="response-message"></div>
+    <div class="instructions">
+      <ul>
+        <li>１周目のランナーを先頭にしてください。集計では周回数順に表示されます。</li>
+        <li>送信完了後、「集計」で確認をお願いします。</li>
+        <li>ランナーと周回数がすでに表示されている場合は記録済みです。修正が必要な場合は編集して送信ください。（まだ二重に記録されますので、ご一報ください。）</li>
+      </ul>
+    </div>
 
     <script>
         function addRow(button) {
@@ -181,7 +212,10 @@
         function submitForm() {
             const submitButton = document.getElementById('submit-button');
             submitButton.disabled = true; // 送信ボタンを無効化
-
+            const responseMessage = document.getElementById('response-message');
+            responseMessage.textContent = '送信しています';
+            responseMessage.style.display = 'block';
+            
             const participants = [];
             const formRows = document.querySelectorAll('.form-row');
             formRows.forEach(row => {

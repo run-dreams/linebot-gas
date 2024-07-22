@@ -266,10 +266,15 @@ function doGet(e) {
   // User ListシートからdisplayName列のデータを取得
   var participants = getParticipantsFromSheet();
 
+  // リレーの集計をして、24h Reportシートから既存の名前と周回数を取得
+  var relayResult = getRelaySummary(groupId, null);
+  var existingRecords = relayResult.participants > 0 ? getExistingRecords() : [{ name: '', laps: '' }]; // 記録がない場合のデフォルト値
+
   // HTMLテンプレートを生成し、データリストを渡す
   var template = HtmlService.createTemplateFromFile('relayentryform');
   template.participants = participants;
   template.groupId = groupId; // groupIdをテンプレートに渡す
+  template.existingRecords = existingRecords; // 既存の名前と周回数をテンプレートに渡す
   
   // HTMLの生成
   return template.evaluate()
@@ -291,6 +296,18 @@ function getParticipantsFromSheet() {
   }
   
   return participants;
+}
+
+function getExistingRecords() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('24h Report');
+  var data = sheet.getRange('A2:D').getValues(); // A列とD列のデータを取得
+  var records = data.map(function(row) {
+    return {
+      name: row[0],
+      laps: row[3]
+    };
+  }).filter(record => record.name && record.laps); // 空白を除去
+  return records;
 }
 
 // Record Relay participants to the sheet
