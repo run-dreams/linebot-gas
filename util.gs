@@ -1045,6 +1045,41 @@ function getRelaySummary(groupId, targetDate) {
   };
 }
 
+// 指定の日時のリレー記録を取り消す
+function cancelRelayRecordWithinPeriod(groupId, targetDate) {
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
+  // スプレッドシートとシートを取得
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Analyze Log');
+
+  // データ範囲を取得 (例: A列とM列)
+  var dataRange = sheet.getRange("A2:M"); // ヘッダーが1行あると仮定
+  var data = dataRange.getValues();
+
+  // 指定された期間をDateオブジェクトに変換
+  var date_from = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 00:00:00");
+  var date_to = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 23:59:59");
+  var start = new Date(date_from);
+  var end = new Date(date_to);
+
+  // 各行を処理
+  for (var i = data.length - 1; i >= 0; i--) {
+    var rowDate = new Date(data[i][0]); // A列の日付
+    if (rowDate < start) {
+      console.log(`scan stopped at row:${i} ${rowDate}`);
+      break;
+    }
+    if (groupId == data[i][2] && rowDate >= start && rowDate <= end && data[i][7] > 0 && data[i][12] == '') {
+      // 指定された期間内の場合、M列に「取り消し」を書き込む
+      sheet.getRange(i + 2, 13).setValue("取り消し"); // i + 2はヘッダー行を考慮
+      sheet.getRange(i + 2, 12).setValue(`記録表が再登録されました`);
+      console.log(`update: ${data[i][0]} / ${data[i][4]} (${data[i][7]})`);
+    }
+  }
+}
+
 // 昨日の集計（グループ）
 // TODO: リレー分（記録表フォーム）の記録を合わせて表示できるようにするとよい。
 function getPreviousSummary(groupId) {

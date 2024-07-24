@@ -313,6 +313,8 @@ function getExistingRecords() {
 // Record Relay participants to the sheet
 // TODO: すでに記録があるのに送信された場合は訂正とみなして差分を反映する。
 function submitParticipants(groupId, participants) {
+  // すでに記録がある場合は取り消す。
+  cancelRelayRecordWithinPeriod(groupId, null);
   // 受け取った参加者データを1行ずつ取り出して処理
   var result = "";
   participants.forEach(function(participant, index) {
