@@ -1054,10 +1054,6 @@ function cancelRelayRecordWithinPeriod(groupId, targetDate) {
   // スプレッドシートとシートを取得
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Analyze Log');
 
-  // データ範囲を取得 (例: A列とM列)
-  var dataRange = sheet.getRange("A2:M"); // ヘッダーが1行あると仮定
-  var data = dataRange.getValues();
-
   // 指定された期間をDateオブジェクトに変換
   var date_from = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 00:00:00");
   var date_to = Utilities.formatDate(dt, "JST", "yyyy-MM-dd 23:59:59");
@@ -1065,17 +1061,21 @@ function cancelRelayRecordWithinPeriod(groupId, targetDate) {
   var end = new Date(date_to);
 
   // 各行を処理
-  for (var i = data.length - 1; i >= 0; i--) {
-    var rowDate = new Date(data[i][0]); // A列の日付
+  const lastRow = sheet.getLastRow();
+
+  for (var i = lastRow; i >= 0; i--) {
+    var dataRange = sheet.getRange(`A${i}:M${i}`);
+    var data = dataRange.getValues();
+    var rowDate = new Date(data[0][0]); // A列の日付
     if (rowDate < start) {
       console.log(`scan stopped at row:${i} ${rowDate}`);
       break;
     }
-    if (groupId == data[i][2] && rowDate >= start && rowDate <= end && data[i][7] > 0 && data[i][12] == '') {
+    if (groupId == data[0][2] && rowDate >= start && rowDate <= end && data[0][7] > 0 && data[0][12] == '') {
       // 指定された期間内の場合、M列に「取り消し」を書き込む
-      sheet.getRange(i + 2, 13).setValue("取り消し"); // i + 2はヘッダー行を考慮
-      sheet.getRange(i + 2, 12).setValue(`記録表が再登録されました`);
-      console.log(`update: ${data[i][0]} / ${data[i][4]} (${data[i][7]})`);
+      sheet.getRange(i, 13).setValue("取り消し"); // i + 2はヘッダー行を考慮
+      sheet.getRange(i, 12).setValue(`記録表が再登録されました`);
+      console.log(`update: ${data[0][0]} / ${data[0][4]} (${data[0][7]})`);
     }
   }
 }
