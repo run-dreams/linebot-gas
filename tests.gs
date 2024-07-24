@@ -1384,3 +1384,10 @@ function testgetRelaySummary() {
   console.log(yesterday);
   console.log(getRelaySummary('group-Id-in-the-sheet-for-development', yesterday));
 }
+
+// 指定の日時のリレー記録を取り消す
+function testCancelRelayRecordWithinPeriod() {
+  var targetDate = new Date("2024/07/23 12:34:56");
+  cancelRelayRecordWithinPeriod('group-Id-in-the-sheet-for-development', targetDate);
+}
+
