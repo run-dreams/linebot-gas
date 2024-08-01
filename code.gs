@@ -125,7 +125,7 @@ function doPost(e) {
           case 'text':
             messageText = event.message.text;
             replyToken = event.replyToken;
-            if(messageText.trim().match(/^集計[\!]*/)) {
+            if(messageText.trim().match(/^集計[\s]*$/)) {
               if(type == 'group') {
                 // グループチャット
                 replyLine(sourcename, replyToken, getSummary(replyTo));
@@ -141,11 +141,11 @@ function doPost(e) {
               break;
             }
             replyToken = event.replyToken;
-            if(messageText.trim().match(/^昨日の集計[\!]*/)) {
+            if(messageText.trim().match(/^昨日の集計[\s]*$/)) {
               replyLine(sourcename, replyToken, getPreviousSummary(replyTo));
               break;
             }
-            if(messageText.trim().match(/^先月の集計[\!]*/)) {
+            if(messageText.trim().match(/^先月の集計[\s]*$/)) {
               if(type == 'group') {
                 // グループチャット
                 // TODO: 相談してから公開
@@ -157,7 +157,7 @@ function doPost(e) {
               }
               break;
             }
-            if(messageText.trim().match(/^修正[\!]*/)) {
+            if(messageText.trim().match(/^修正[\s]*$/)) {
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
@@ -173,7 +173,7 @@ function doPost(e) {
               replyLine(sourcename, replyToken, updateResult(a[1], a[2], a[3], a[4].replaceAll('：',':')));
               break;
             }
-            if(messageText.trim().match(/^追加[\!]*/)) {
+            if(messageText.trim().match(/^追加[\s]*$/)) {
               replyAddResultInstruction(sourcename, replyToken);
               break;
             }
@@ -183,12 +183,12 @@ function doPost(e) {
               replyLine(sourcename, replyToken, addResult(a[1], a[2], groupId, a[3], a[4].replaceAll('：',':')),　"", "", userId);
               break;
             }
-            if(messageText.trim().match(/^取り消し|^取消し|^取消|^削除|^とりけし[\!]*/)) {
+            if(messageText.trim().match(/(^取り消し|^取消し|^取消|^削除|^とりけし)[\s]*$/)) {
               // 取り消し
               replyIgnoreResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
-            if(messageText.trim().match(/^記録[\!]*/)) {
+            if(messageText.trim().match(/^記録[\s]*$/)) {
               // TODO: フォームが対応したら年月日もパラメータで渡す
               var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
               var note = '\n\n登録後、「集計」で記録を確認してください。'
