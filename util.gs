@@ -1014,7 +1014,7 @@ function getRelaySummary(groupId, targetDate) {
   var result = `リレー参加者（周回数）\n`;
 
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, H WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null) AND M is null AND H is not null order by H desc", -1)`);
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT E, F, G, H WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND C = '${groupId}' AND (F is not null) AND M is null AND H is not null", -1)`);
 
   // queryで転写された当日のリレー参加者記録を取得
   var records = sheet.getRange(2,1,sheet.getLastRow()-1,4).getDisplayValues();
