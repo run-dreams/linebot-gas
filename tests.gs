@@ -1275,7 +1275,7 @@ function testLastMonthlySummaryGroup() {
 
 // getMonthlySummary() のテスト
 function testMonthlySummary() {
-  console.log(getMonthlySummary("group-Id-in-the-sheet-for-development"));
+  console.log(getMonthlySummary("group-Id-in-the-sheet-for-development", "user-Id-in-the-sheet-for-development"));
 }
 
 // getSummary() のテスト
