@@ -1160,7 +1160,7 @@ function getPersonalSummary(userId) {
     if(records[1][1] != '') {
       // グループチャットでの記録があれば、ひとまず最初のチームのみ。
       result += `\n\n`;
-      result += getMonthlySummary(records[1][0]);
+      result += getMonthlySummary(records[1][0], userId);
     }
   }
   
@@ -1168,7 +1168,7 @@ function getPersonalSummary(userId) {
 }
 
 // 今月の集計（グループ）
-function getMonthlySummary(groupId) {
+function getMonthlySummary(groupId, userId) {
 
   var ss = SpreadsheetApp.getActive()
   var sheet = ss.getSheetByName('Monthly Report');
@@ -1192,9 +1192,14 @@ function getMonthlySummary(groupId) {
     // queryで転写された対象月のラン記録ユーザ集計を取得しTOP3を表示
     result += `TOP3\n`;
     var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
-    for(i = 1; i < records.length && i <= 3; i++) {
-      //   runners.set(records[i][0], { name: records[i][0], count: 1, distance: records[i][1], duration: records[i][2]});
-      result += `${i}) ${records[i][1]}(${records[i][3]}) ${records[i][2]} km\n`;
+    for(i = 1; i < records.length; i++) {
+      if(i <= 3) {
+        result += `${i}) ${records[i][1]}(${records[i][3]}) ${records[i][2]} km\n`;
+      }
+      else if(records[i][0] == userId) {
+        result += `---\n${i}) ${records[i][1]}(${records[i][3]}) ${records[i][2]} km\n`;
+        break;
+      }
     }
   }
 
