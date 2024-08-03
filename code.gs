@@ -264,7 +264,7 @@ function doGet(e) {
   var groupId = e.parameter.groupId || 'group-Id-in-the-sheet-for-development'; // デフォルト値を設定
 
   // User ListシートからdisplayName列のデータを取得
-  var participants = getParticipantsFromSheet();
+  var participants = getParticipantsFromSheet(groupId);
 
   // リレーの集計をして、24h Reportシートから既存の名前と周回数を取得
   var relayResult = getRelaySummary(groupId, null);
@@ -283,15 +283,15 @@ function doGet(e) {
       .setSandboxMode(HtmlService.SandboxMode.IFRAME);
 }
 
-function getParticipantsFromSheet() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('User List');
-  var data = sheet.getRange('B:B').getValues(); // B列全体を取得 TODO: カラム名で列を特定するように
+function getParticipantsFromSheet(groupId) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Group User');
+  var data = sheet.getRange('A:F').getValues();
   var participants = [];
   
   // 1行目がヘッダと仮定
   for (var i = 1; i < data.length; i++) {
-    if (data[i][0]) {
-      participants.push(data[i][0]);
+    if (data[i][0] == groupId && data[i][5] == '') {
+      participants.push(data[i][2]);
     }
   }
   

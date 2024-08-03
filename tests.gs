@@ -1372,7 +1372,7 @@ function testSubmitParticipants() {
 
 // 記録フォームに表示する参加者候補リストを作成
 function testGetParticipantsFromSheet() {
-  console.log(getParticipantsFromSheet());
+  console.log(getParticipantsFromSheet('group-Id-in-the-sheet-for-development'));
 }
 
 // リレーの集計
