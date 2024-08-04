@@ -224,6 +224,10 @@ function doPost(e) {
               messageText += 'タイム' + String.fromCharCode(9) + (duration != null ? duration : '??');
               if(duration != null && distance != null && name != 'unknown') {
                 // 正常。修正の確認は不要。
+                var eventInfo = getEventSummaryPersonal(groupId, userId);
+                if(eventInfo != null) {
+                  messageText += `\n\n${eventInfo.summary}`;
+                }
                 replyLine(sourcename, replyToken, messageText);
               } else if(name == 'unknown') {
                 // 名前が未設定

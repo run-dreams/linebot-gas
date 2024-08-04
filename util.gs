@@ -1045,6 +1045,108 @@ function getRelaySummary(groupId, targetDate) {
   };
 }
 
+
+// 参加中イベントの集計
+function getEventSummaryPersonal(groupId, userId, targetDate) {
+
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
+
+  // 開催中のイベント情報
+  var eventInfo = getEventInfo(groupId, dt);
+  if(eventInfo == null) {
+    return null;
+  }
+
+  // 開催中イベントの参加情報
+  var eventAttendInfo = getEventAttendInfo(eventInfo.eventId, userId);
+  if(eventAttendInfo == null) {
+    return null;
+  }
+  var targetDistance = eventAttendInfo.targetDistance;
+
+  // イベント期間中の走行記録を集計
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Monthly Report');
+  var date_from = Utilities.formatDate(eventInfo.eventStart, "JST", "yyyy-MM-dd hh:mm:ss");
+  var date_to = Utilities.formatDate(eventInfo.eventEnd, "JST", "yyyy-MM-dd hh:mm:ss");
+  var result = `参加中のイベント: ${eventInfo.eventName}\n`;
+
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT C, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND D = '${userId}' AND (F is not null OR G is not null) AND M is null group by C, E order by C desc", -1)`);
+
+  var summary = sheet.getRange(1,6,3,3).getDisplayValues();
+  var runTimes = 0;
+  var totalDistance = 0;
+  if(summary[1][1] == '0.0' && summary[1][2] == '0') {
+    result = 'まだ記録がありません！';
+  }
+  else {
+    totalDistance = summary[1][1];
+    runTimes = summary[1][2];
+    result += `走った回数 ${runTimes} 回\n`;
+    result += `合計距離 ${totalDistance} km\n`;
+    result += `目標距離 ${targetDistance} km`;
+  }
+
+  return {
+    eventinfo: eventInfo,
+    totaldistance: totalDistance,
+    runtimes: runTimes,
+    summary: result
+  };
+}
+
+// 特定イベントの参加情報を取得する
+function getEventAttendInfo(eventId, userId) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event Attendies');
+  var data = sheet.getRange('A:F').getValues();
+  var participants = [];
+  
+  // 1行目がヘッダと仮定
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] == eventId && data[i][1] == userId) {
+      return {
+        eventId: data[i][0],
+        userId: data[i][1],
+        targetDistance: data[i][2],
+        totalDistance: data[i][3],
+        runTimes: data[i][4],
+        lastUpdate: data[i][5]
+      };
+    }
+  }
+  
+  return null;
+}
+
+// 開催中のイベントの情報を取得する
+function getEventInfo(groupId, targetDate) {
+  var dt = new Date();
+  if(targetDate != null) {
+    dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
+  // スプレッドシートとシートを取得
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event List');
+  var date_param = Utilities.formatDate(dt, "JST", "yyyy-MM-dd hh:mm:ss");
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 7).setValue(`=QUERY(A:E, "select A, B, C, D, E where E > datetime '${date_param}' and D < datetime '${date_param}'",TRUE)`);
+  var data = sheet.getRange('G2:K').getValues();
+  if(data[0][0] == '') {
+    return null;
+  }
+  
+  return {
+    groupId: data[0][0],
+    eventId: data[0][1],
+    eventName: data[0][2],
+    eventStart: data[0][3],
+    eventEnd: data[0][4]
+  };
+}
+
 // 指定の日時のリレー記録を取り消す
 function cancelRelayRecordWithinPeriod(groupId, targetDate) {
   var dt = new Date();
