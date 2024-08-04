@@ -1391,3 +1391,19 @@ function testCancelRelayRecordWithinPeriod() {
   cancelRelayRecordWithinPeriod('group-Id-in-the-sheet-for-development', targetDate);
 }
 
+// 開催中のイベントを取得する
+function testGetEventInfo() {
+  var targetDate = new Date("2024/08/04 12:34:56");
+  console.log(getEventInfo('group-Id-in-the-sheet-for-development', targetDate));
+}
+
+// 特定イベントの参加状況を取得する
+function testGetEventAttendInfo() {
+  console.log(getEventAttendInfo('event-Id-in-the-sheet-for-development', 'user-Id-in-the-sheet-for-development'));
+}
+
+// 開催中のイベント参加状況を取得する
+function testGetEventSummaryPersonal() {
+  var targetDate = new Date("2024/08/04 12:34:56");
+  console.log(getEventSummaryPersonal('group-Id-in-the-sheet-for-development', 'user-Id-in-the-sheet-for-development', targetDate));
+}
