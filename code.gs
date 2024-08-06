@@ -157,6 +157,10 @@ function doPost(e) {
               }
               break;
             }
+            if(messageText.trim().match(/^イベント[\s]*$/)) {
+              replyLine(sourcename, replyToken, getEvent(replyTo));
+              break;
+            }
             if(messageText.trim().match(/^修正[\s]*$/)) {
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;

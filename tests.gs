@@ -1392,9 +1392,14 @@ function testCancelRelayRecordWithinPeriod() {
 }
 
 // 開催中のイベントを取得する
-function testGetEventInfo() {
+function testGetLatestEventInfo() {
   var targetDate = new Date("2024/08/04 12:34:56");
-  console.log(getEventInfo('group-Id-in-the-sheet-for-development', targetDate));
+  console.log(getLatestEventInfo('group-Id-in-the-sheet-for-development', targetDate));
+}
+
+// 特定イベントの情報を取得する
+function testGetEventInfo() {
+  console.log(getEventInfo('group-Id-in-the-sheet-for-development', 'event-Id-in-the-sheet-for-development'));
 }
 
 // 特定イベントの参加状況を取得する
@@ -1406,4 +1411,24 @@ function testGetEventAttendInfo() {
 function testGetEventSummaryPersonal() {
   var targetDate = new Date("2024/08/04 12:34:56");
   console.log(getEventSummaryPersonal('group-Id-in-the-sheet-for-development', 'user-Id-in-the-sheet-for-development', targetDate));
+}
+
+// 特定イベントの参加者を取得する
+function testGetEventAttendies() {
+  console.log(getEventAttendies('event-Id-in-the-sheet-for-development'));
+}
+
+// 特定イベントの集計を取得する
+function testGetEventSummary() {
+  console.log(getEventSummary('group-Id-in-the-sheet-for-development', 'event-Id-in-the-sheet-for-development'));
+}
+
+// 特定イベントの集計を取得する（参加者リスト付き）
+function testGetEventDetail() {
+  console.log(getEventSummary('group-Id-in-the-sheet-for-development', 'event-Id-in-the-sheet-for-development', true));
+}
+
+// 「イベント」
+function testGetEvent() {
+  console.log(getEvent('group-Id-in-the-sheet-for-development'));
 }
