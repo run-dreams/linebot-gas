@@ -1070,8 +1070,8 @@ function getEventSummaryPersonal(groupId, userId, targetDate) {
   // イベント期間中の走行記録を集計
   var ss = SpreadsheetApp.getActive()
   var sheet = ss.getSheetByName('Monthly Report');
-  var date_from = Utilities.formatDate(eventInfo.eventStart, "JST", "yyyy-MM-dd hh:mm:ss");
-  var date_to = Utilities.formatDate(eventInfo.eventEnd, "JST", "yyyy-MM-dd hh:mm:ss");
+  var date_from = Utilities.formatDate(eventInfo.eventStart, "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(eventInfo.eventEnd, "JST", "yyyy-MM-dd HH:mm:ss");
   var result = `参加中のイベント: ${eventInfo.eventName}\n`;
 
   // queryの条件（抽出対象期間）を更新
@@ -1130,7 +1130,7 @@ function getEventInfo(groupId, targetDate) {
   }
   // スプレッドシートとシートを取得
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event List');
-  var date_param = Utilities.formatDate(dt, "JST", "yyyy-MM-dd hh:mm:ss");
+  var date_param = Utilities.formatDate(dt, "JST", "yyyy-MM-dd HH:mm:ss");
   // queryの条件（抽出対象期間）を更新
   sheet.getRange(1, 7).setValue(`=QUERY(A:E, "select A, B, C, D, E where E > datetime '${date_param}' and D < datetime '${date_param}'",TRUE)`);
   var data = sheet.getRange('G2:K').getValues();
