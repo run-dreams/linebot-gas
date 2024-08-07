@@ -946,10 +946,30 @@ function getSummary(groupId) {
     }
     result += '\n'
   }
+  else {
+    if(relayResult.participants == 0) {
+      result += `記録はまだありません\n`;
+    }
+    result += '\n'
+  }
   // 明日に向けての記録
   if(tommorowOuterResult.participants > 0) {
     result += `${Utilities.formatDate(tommorow, "JST", "yyyy年MM月dd日")}\n`;
     result += `${tommorowOuterResult.summary}\n残り${tommorowOuterResult.remainingdistance}\n`;
+  }
+  // 開催中のイベント情報
+  var eventInfo = getLatestEventInfo(groupId);
+  if(eventInfo != null) {
+    var eventResult;
+    if(relayResult.participants == 0 && outerResult.participants == 0 && tommorowOuterResult.participants == 0) {
+      // イベントの集計しかない場合は詳細も表示
+      eventResult = getEventSummary(groupId, eventInfo.eventId, true);
+      result += `開催中のイベント: ${eventResult.summary}`;
+    }
+    else {
+      eventResult = getEventSummary(groupId, eventInfo.eventId);
+      result += `開催中のイベント: ${eventResult.summary}`;
+    }
   }
   return result;
 }
@@ -1045,7 +1065,6 @@ function getRelaySummary(groupId, targetDate) {
   };
 }
 
-
 // 参加中イベントの集計
 function getEventSummaryPersonal(groupId, userId, targetDate) {
 
@@ -1055,7 +1074,7 @@ function getEventSummaryPersonal(groupId, userId, targetDate) {
   }
 
   // 開催中のイベント情報
-  var eventInfo = getEventInfo(groupId, dt);
+  var eventInfo = getLatestEventInfo(groupId, dt);
   if(eventInfo == null) {
     return null;
   }
@@ -1122,8 +1141,114 @@ function getEventAttendInfo(eventId, userId) {
   return null;
 }
 
+// イベント
+function getEvent(groupId) {
+  // イベント情報を表示
+  // TODO: 複数イベントがある場合や終了したイベント、開催予定のイベントがある場合の出しわけが必要
+  var eventInfo = getLatestEventInfo(groupId);
+  if(eventInfo == null) {
+    return 'イベント情報はありません';
+  }
+  else {
+    return `開催中のイベント: ${getEventSummary(groupId, eventInfo.eventId, true).summary}`;
+  }
+}
+
+// 特定イベントの集計
+function getEventSummary(groupId, eventId, detail) {
+  var eventInfo = getEventInfo(groupId, eventId);
+  if(eventInfo == null) {
+    return null;
+  }
+
+  // イベントの参加者情報
+  var data = getEventAttendies(eventId);
+  // userIdをキーにするマップを作成
+  var userMap = {};
+  data.attendies.forEach(function(attendee) {
+    userMap[attendee.userId] = attendee.targetDistance;
+  });
+  // userIdを抽出してOR条件で連結
+  var userIds = data.attendies.map(function(attendee) {
+    return attendee.userId;
+  });
+  var queryConditions = userIds.map(function(userId) {
+    return "D = '" + userId + "'";
+  }).join(" OR ");
+
+  // イベント期間中の走行記録を集計
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Monthly Report');
+  var date_from = Utilities.formatDate(eventInfo.eventStart, "JST", "yyyy-MM-dd HH:mm:ss");
+  var date_to = Utilities.formatDate(eventInfo.eventEnd, "JST", "yyyy-MM-dd HH:mm:ss");
+  var result = `${eventInfo.eventName}\n`;
+
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 1).setValue(`=QUERY('Analyze Log'!A:M,"SELECT D, E, SUM(F), COUNT(E) WHERE A > datetime '${date_from}' AND A <= datetime '${date_to}' AND (${queryConditions}) AND (F is not null OR G is not null) AND M is null group by D, E order by SUM(F) desc", -1)`);
+
+  var summary = sheet.getRange(1,6,3,5).getDisplayValues();
+  var runTimes = 0;
+  var totalDistance = 0;
+  if(summary[1][1] == '0.0' && summary[1][2] == '0') {
+    result = 'まだ記録がありません！';
+  }
+  else {
+    totalDistance = summary[1][1];
+    runTimes = summary[1][2];
+    result += `参加者 ${data.attendies.length} 人\n`;
+    result += `走った参加者 ${summary[1][4]} 人\n`;
+    if(detail) {
+      // 参加者別の詳細も表示
+      // TODO: 走っていない参加者も表示
+      var records = sheet.getRange(1,1,sheet.getLastRow(),4).getDisplayValues();
+      for(i = 1; i < records.length; i++) {
+        result += `${i}) ${records[i][1]}(${records[i][3]}) ${records[i][2]} / ${userMap[records[i][0]]} km\n`;
+      }
+    }
+    result += `合計距離 ${totalDistance} km\n`;
+    result += `目標距離 ${data.totalDistance} km`;
+  }
+
+  return {
+    eventinfo: eventInfo,
+    totaldistance: totalDistance,
+    runtimes: runTimes,
+    summary: result
+  };
+}
+
+// イベントの参加者情報を取得する
+function getEventAttendies(eventId) {
+  // スプレッドシートとシートを取得
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event Attendies');
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 8).setValue(`=QUERY(A:F, "select B, C, D, E, F where A = '${eventId}'",TRUE)`);
+  var data = sheet.getRange('H2:L').getValues();
+  if(data[0][0] == '') {
+    return null;
+  }
+  var totalDistance = 0;
+  var records = data.map(function(row) {
+    totalDistance += row[1];
+    return {
+      userId: row[0],
+      targetDistance: row[1],
+      totalDistance: row[2],
+      runTimes: row[3],
+      lastUpdate: row[4]
+    };
+  }).filter(record => record.userId && record.targetDistance); // 空白を除去
+  
+  return {
+    eventId: eventId,
+    attendies: records,
+    totalDistance: totalDistance,
+    currentDate: new Date()
+  };
+}
+
 // 開催中のイベントの情報を取得する
-function getEventInfo(groupId, targetDate) {
+function getLatestEventInfo(groupId, targetDate) {
   var dt = new Date();
   if(targetDate != null) {
     dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
@@ -1132,7 +1257,27 @@ function getEventInfo(groupId, targetDate) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event List');
   var date_param = Utilities.formatDate(dt, "JST", "yyyy-MM-dd HH:mm:ss");
   // queryの条件（抽出対象期間）を更新
-  sheet.getRange(1, 7).setValue(`=QUERY(A:E, "select A, B, C, D, E where E > datetime '${date_param}' and D < datetime '${date_param}'",TRUE)`);
+  sheet.getRange(1, 7).setValue(`=QUERY(A:E, "select A, B, C, D, E where E > datetime '${date_param}' and D < datetime '${date_param}' and A = '${groupId}'",TRUE)`);
+  var data = sheet.getRange('G2:K').getValues();
+  if(data[0][0] == '') {
+    return null;
+  }
+  
+  return {
+    groupId: data[0][0],
+    eventId: data[0][1],
+    eventName: data[0][2],
+    eventStart: data[0][3],
+    eventEnd: data[0][4]
+  };
+}
+
+// 特定イベントの情報を取得する
+function getEventInfo(groupId, eventId) {
+  // スプレッドシートとシートを取得
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Event List');
+  // queryの条件（抽出対象期間）を更新
+  sheet.getRange(1, 7).setValue(`=QUERY(A:E, "select A, B, C, D, E where A = '${groupId}' and B = '${eventId}'",TRUE)`);
   var data = sheet.getRange('G2:K').getValues();
   if(data[0][0] == '') {
     return null;
