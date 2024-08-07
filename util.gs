@@ -968,7 +968,7 @@ function getSummary(groupId) {
     }
     else {
       eventResult = getEventSummary(groupId, eventInfo.eventId);
-      result += `開催中のイベント: ${eventResult.summary}`;
+      result += `\n開催中のイベント: ${eventResult.summary}`;
     }
   }
   return result;
@@ -1190,7 +1190,7 @@ function getEventSummary(groupId, eventId, detail) {
   var runTimes = 0;
   var totalDistance = 0;
   if(summary[1][1] == '0.0' && summary[1][2] == '0') {
-    result = 'まだ記録がありません！';
+    result += 'まだ記録がありません！';
   }
   else {
     totalDistance = summary[1][1];
@@ -1225,7 +1225,12 @@ function getEventAttendies(eventId) {
   sheet.getRange(1, 8).setValue(`=QUERY(A:F, "select B, C, D, E, F where A = '${eventId}'",TRUE)`);
   var data = sheet.getRange('H2:L').getValues();
   if(data[0][0] == '') {
-    return null;
+    return {
+      eventId: eventId,
+      attendies: [],
+      totalDistance: 0,
+      currentDate: new Date()
+    };
   }
   var totalDistance = 0;
   var records = data.map(function(row) {
