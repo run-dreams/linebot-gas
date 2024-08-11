@@ -926,9 +926,12 @@ function getLastMonthStart(targetDate) {
 
 // グループの集計
 function getSummary(groupId) {
+  // TODO: 固定で朝6時を基準にしているが、グループにより会場外の集計対象時間が異なるため考慮が必要
   var today = new Date();
+  today.setHours(6);
   var tommorow = new Date();
   tommorow.setDate(today.getDate()+1);
+  tommorow.setHours(6);
   var relayResult = getRelaySummary(groupId, today);
   var outerResult = getOuterSummary(groupId, today);
   var tommorowOuterResult = getOuterSummary(groupId, tommorow);
