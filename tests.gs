@@ -1315,11 +1315,16 @@ function testGetCurrentPeriod() {
 // getNextPeriod() のテスト
 function testGetNextPeriod() {
   var today = new Date();
-  console.log(today);
+  console.log(`today, just now: ${today}`);
   console.log(getNextPeriod('group-Id-in-the-sheet-for-development', today));
+
+  today.setHours(6);
+  console.log(`today, early time: ${today}`);
+  console.log(getNextPeriod('group-Id-in-the-sheet-for-development', today));
+
   var yesterday = new Date();
   yesterday.setDate(today.getDate()-1);
-  console.log(yesterday);
+  console.log(`yesterday: ${yesterday}`);
   console.log(getNextPeriod('group-Id-in-the-sheet-for-development', yesterday));
 }
 

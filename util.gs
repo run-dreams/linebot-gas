@@ -869,6 +869,9 @@ function getNextPeriod(groupId, targetDate) {
   if(targetDate != null) {
     dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
+  if(dt.getHours() * 100 + dt.getMinutes() > 830) {
+    dt.setDate(dt.getDate() +1);
+  }
   dt.setHours(8);
   dt.setMinutes(10);
   dt.setSeconds(0);
