@@ -1299,11 +1299,16 @@ function testGetPreviousSummary() {
 // getCurrentPeriod() のテスト
 function testGetCurrentPeriod() {
   var today = new Date();
-  console.log(today);
+  console.log(`today, just now: ${today}`);
   console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', today));
+
+  today.setHours(6);
+  console.log(`today, early time: ${today}`);
+  console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', today));
+
   var yesterday = new Date();
   yesterday.setDate(today.getDate()-1);
-  console.log(yesterday);
+  console.log(`yesterday: ${yesterday}`);
   console.log(getCurrentPeriod('group-Id-in-the-sheet-for-development', yesterday));
 }
 
