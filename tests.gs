@@ -1166,9 +1166,16 @@ ELE. loss
 Team/Friend
 `
 
+var sample43 = `ランニング
+56'30.2
+8.01 km
+07'03/km
+SUUNTO`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample42', sample42, '0:10:43', '1.02');
+  result += detectTest('sample43', sample43, '0:56:30.2', '8.01'); // SUUNTO
+  result += detectTest('sample2', sample2, '00:55:29.3', '8.05');  
  
   console.log(`results: ${result}`);
 }
@@ -1210,13 +1217,14 @@ function myTest() {
   result += detectTest('sample33', sample33, '01:01:31', '12.026'); // LO → 01
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
   result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
-  result += detectTest('sample36', sample36, '0:18:48', '4.01');　// 改行して「時間」ラベル
+  result += detectTest('sample36', sample36, '0:18:48', '4.01'); // 改行して「時間」ラベル
   result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
   result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
-  result += detectTest('sample39', sample39, '0:45:45', '7.54');　// 改行して「合計タイム」ラベル
+  result += detectTest('sample39', sample39, '0:45:45', '7.54'); // 改行して「合計タイム」ラベル
   result += detectTest('sample40', sample40, '1:12:17', '11.37'); // 距離km以下がカンマ区切り
   result += detectTest('sample41', sample41, '0:21:59', '5.01'); // ↑の追加パターン
   result += detectTest('sample42', sample42, '0:10:43', '1.02'); // TATTA English
+  result += detectTest('sample43', sample43, '0:56:30.2', '8.01'); // SUUNTO
 
   console.log(`results: ${result}`);
 }
