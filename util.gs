@@ -852,7 +852,9 @@ function getCurrentPeriod(groupId, targetDate) {
   if(targetDate != null) {
     dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
   }
-  dt.setDate(dt.getDate() -1);
+  if(dt.getHours() * 100 + dt.getMinutes() < 830) {
+    dt.setDate(dt.getDate() -1);
+  }
   dt.setHours(8);
   dt.setMinutes(10);
   dt.setSeconds(0);
@@ -866,6 +868,9 @@ function getNextPeriod(groupId, targetDate) {
   var dt = new Date();
   if(targetDate != null) {
     dt = new Date(targetDate.getTime()); // targetDateのコピーを作成
+  }
+  if(dt.getHours() * 100 + dt.getMinutes() > 830) {
+    dt.setDate(dt.getDate() +1);
   }
   dt.setHours(8);
   dt.setMinutes(10);
@@ -921,9 +926,12 @@ function getLastMonthStart(targetDate) {
 
 // グループの集計
 function getSummary(groupId) {
+  // TODO: 固定で朝6時を基準にしているが、グループにより会場外の集計対象時間が異なるため考慮が必要
   var today = new Date();
+  today.setHours(6);
   var tommorow = new Date();
   tommorow.setDate(today.getDate()+1);
+  tommorow.setHours(6);
   var relayResult = getRelaySummary(groupId, today);
   var outerResult = getOuterSummary(groupId, today);
   var tommorowOuterResult = getOuterSummary(groupId, tommorow);
