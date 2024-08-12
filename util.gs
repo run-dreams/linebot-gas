@@ -21,18 +21,6 @@ ${a[1]}日目 ${a[2]}年 ${a[3]}月 ${a[4]}日
 }
 
 function detectTime(result) {
-  // 00:55:29.3
-  a = result.match(/([0-9]+):([0-5][0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
-  if ( a != null) {
-    console.log('match dt1');
-    return a[1] + ':' + a[2] + ':' + a[3] + '.' + a[4];
-  }
-  // 5:59.6
-  a = result.match(/([0-5]*[0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
-  if ( a != null) {
-    console.log('match dt1\'');
-    return '0:' + a[1] + ':' + a[2] + '.' + a[3];
-  }
   // タイム
   // 01:36:08
   // TATTA
@@ -48,19 +36,6 @@ function detectTime(result) {
     console.log('match dt3');
     return a[1] + ':' + a[2] + ':' + a[3];
   }
-  // 0:51:45
-  a = result.match(/([0-9]+):([0-5][0-9]):([0-5][0-9])/);
-  if ( a != null) {
-    console.log('match dt5');
-    return a[1] + ':' + a[2] + ':' + a[3];
-  }
-  // 36:08
-  // タイム
-  a = result.match(/\n([0-5][0-9]):([0-5][0-9])\n[合計タイム|タイム|時間]/);
-  if ( a != null) {
-    console.log('match dt4');
-    return '0:' + a[1] + ':' + a[2];
-  }
   // 0:49'01" LAP
   // 01:00′ 15"-
   a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]*/g)];
@@ -73,6 +48,31 @@ function detectTime(result) {
         return duration;
       }
     }
+  }
+  // 00:55:29.3
+  a = result.match(/([0-9]+):([0-5][0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
+  if ( a != null) {
+    console.log('match dt1');
+    return a[1] + ':' + a[2] + ':' + a[3] + '.' + a[4];
+  }
+  // 5:59.6
+  a = result.match(/([0-5]*[0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
+  if ( a != null) {
+    console.log('match dt1\'');
+    return '0:' + a[1] + ':' + a[2] + '.' + a[3];
+  }
+  // 0:51:45
+  a = result.match(/([0-9]+):([0-5][0-9]):([0-5][0-9])/);
+  if ( a != null) {
+    console.log('match dt5');
+    return a[1] + ':' + a[2] + ':' + a[3];
+  }
+  // 36:08
+  // タイム
+  a = result.match(/\n([0-5][0-9]):([0-5][0-9])\n[合計タイム|タイム|時間]/);
+  if ( a != null) {
+    console.log('match dt4');
+    return '0:' + a[1] + ':' + a[2];
   }
   // 01:00
   a = [...result.matchAll(/\n([0-5]{0,1}[0-9]):([0-5][0-9])\n/g)];
