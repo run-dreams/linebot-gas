@@ -1172,10 +1172,15 @@ var sample43 = `ランニング
 07'03/km
 SUUNTO`;
 
+var sample44 = `ランニング
+1:11'10
+10.00 km
+07'07.4km
+SUUN`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample43', sample43, '0:56:30.2', '8.01'); // SUUNTO
-  result += detectTest('sample2', sample2, '00:55:29.3', '8.05');  
+  result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
  
   console.log(`results: ${result}`);
 }
@@ -1225,6 +1230,7 @@ function myTest() {
   result += detectTest('sample41', sample41, '0:21:59', '5.01'); // ↑の追加パターン
   result += detectTest('sample42', sample42, '0:10:43', '1.02'); // TATTA English
   result += detectTest('sample43', sample43, '0:56:30.2', '8.01'); // SUUNTO
+  result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
 
   console.log(`results: ${result}`);
 }
