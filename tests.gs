@@ -1178,9 +1178,47 @@ var sample44 = `ランニング
 07'07.4km
 SUUN`;
 
+var sample45 = `10:07
+17:52
+Walking
+2024/8/29 (*) 10:41
+步数
+4,868
+タイム
+距離
+3.52km
+消費カロリー
+0:44:13 204kcal
+0:00
+7:22
+14:44
+22:06
+29:28
+44:13`;
+
+var sample46 = `Running
+2024/8/29 (*) 9:40
+タイム
+距離
+ঘ
+0:25:05 5.00km
+最速ペース
+4:42/km
+平均ペース
+5:01/km
+3:59
+6:00
+0:00
+4:10
+8:20
+12:30
+16:40 25:05`;
+
 function newTest() {
   var result = '';
   result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
+  result += detectTest('sample45', sample45, '0:44:13', '3.52'); // TATTA
+  result += detectTest('sample46', sample46, '0:25:05', '5.00'); // TATTA
  
   console.log(`results: ${result}`);
 }
@@ -1231,6 +1269,8 @@ function myTest() {
   result += detectTest('sample42', sample42, '0:10:43', '1.02'); // TATTA English
   result += detectTest('sample43', sample43, '0:56:30.2', '8.01'); // SUUNTO
   result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
+  result += detectTest('sample45', sample45, '0:44:13', '3.52'); // TATTA
+  result += detectTest('sample46', sample46, '0:25:05', '5.00'); // TATTA
 
   console.log(`results: ${result}`);
 }
