@@ -1423,14 +1423,14 @@ function testDetectSheet() {
 function testSubmitParticipants() {
   // テスト用のparticipantsリストを生成
   var participants = [
-    {name: "山田 太郎", laps: 5},
+    {name: "山田 太郎", laps: 6},
     {name: "浦和うなこ", laps: 1},
     {name: "田中 花子", laps: 3},
     {name: "鈴木 一郎", laps: 7}
   ];
 
   // submitParticipants関数を呼び出してテスト
-  var result = submitParticipants("group-Id-in-the-sheet-for-development", participants);
+  var result = submitParticipants("group-Id-in-the-sheet-for-development", participants, "272.2");
   console.log(result);
 }
 
