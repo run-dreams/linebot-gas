@@ -320,7 +320,7 @@ function getExistingRecords() {
 
 // Record Relay participants to the sheet
 // TODO: すでに記録があるのに送信された場合は訂正とみなして差分を反映する。
-function submitParticipants(groupId, participants) {
+function submitParticipants(groupId, participants, selectedLap) {
   // すでに記録がある場合は取り消す。
   cancelRelayRecordWithinPeriod(groupId, null);
   // 受け取った参加者データを1行ずつ取り出して処理
@@ -332,7 +332,7 @@ function submitParticipants(groupId, participants) {
     var distance = participant.laps * 923.2;
     if (index === 0) {
       // 先頭の参加者は１周目とみなし、ショートコースの差分を差し引く。（別所沼ルール）
-      distance -= 272.2;
+      distance -= selectedLap; // #134
     }
     // TODO: 会場も記録されるようにする。会場ごとに周回の距離も異なる。
     addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, "別所沼公園", "dummy");

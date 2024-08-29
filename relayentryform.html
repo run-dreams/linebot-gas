@@ -121,6 +121,11 @@
     <div id="response-message"></div>
 
     <div id="form-container">
+        <div class="lap-selection">
+            1周目: 
+            <label for="lap1"><input type="radio" id="lap1" name="1stlap" value="539.2" checked> 384m</label>
+            <label for="lap2"><input type="radio" id="lap2" name="1stlap" value="272.2"> 651m</label>
+        </div>
         <? for (var i = 0; i < existingRecords.length; i++) { ?>
         <div class="form-row">
             <input list="participants" class="participant-input" value="<?= existingRecords[i].name ?>" placeholder="選択または入力">
@@ -216,6 +221,8 @@
             responseMessage.textContent = '送信しています';
             responseMessage.style.display = 'block';
             
+            const selectedLap = document.querySelector('input[name="1stlap"]:checked').value;
+
             const participants = [];
             const formRows = document.querySelectorAll('.form-row');
             formRows.forEach(row => {
@@ -231,7 +238,7 @@
                 responseMessage.style.display = 'block';
                 submitButton.disabled = false; // 送信ボタンを再度有効化
                 hideModal();
-            }).submitParticipants('<?= groupId ?>', participants);
+            }).submitParticipants('<?= groupId ?>', participants, selectedLap);
         }
     </script>
 
