@@ -36,27 +36,14 @@ function detectTime(result) {
     console.log('match dt3');
     return a[1] + ':' + a[2] + ':' + a[3];
   }
-  // 0:49'01" LAP
-  // 01:00′ 15"-
-  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]*/g)];
-  if ( a.length > 0) {
-    console.log(`match dt6 with ${a.length} patterns.`);
-    for(i=0; i<a.length;i++) {
-      duration = a[i][1] + ':' + a[i][2] + ':' + a[i][3] + a[i][4];
-      if(duration != '0:00:00') {
-        // TODO: 複数あったら返して選択してもらう。
-        return duration;
-      }
-    }
-  }
   // 00:55:29.3
-  a = result.match(/([0-9]+):([0-5][0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
+  a = result.match(/([0-9]+):([0-5][0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})(?!km)/);
   if ( a != null) {
     console.log('match dt1');
     return a[1] + ':' + a[2] + ':' + a[3] + '.' + a[4];
   }
   // 5:59.6
-  a = result.match(/([0-5]*[0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})/);
+  a = result.match(/([0-5]*[0-9])[:\'′]([0-5][0-9])\.([0-9]{1,3})(?!km)/);
   if ( a != null) {
     console.log('match dt1\'');
     return '0:' + a[1] + ':' + a[2] + '.' + a[3];
@@ -73,6 +60,19 @@ function detectTime(result) {
   if ( a != null) {
     console.log('match dt4');
     return '0:' + a[1] + ':' + a[2];
+  }
+  // 0:49'01" LAP
+  // 01:00′ 15"-
+  a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]*/g)];
+  if ( a.length > 0) {
+    console.log(`match dt6 with ${a.length} patterns.`);
+    for(i=0; i<a.length;i++) {
+      duration = a[i][1] + ':' + a[i][2] + ':' + a[i][3] + a[i][4];
+      if(duration != '0:00:00') {
+        // TODO: 複数あったら返して選択してもらう。
+        return duration;
+      }
+    }
   }
   // 01:00
   a = [...result.matchAll(/\n([0-5]{0,1}[0-9]):([0-5][0-9])\n/g)];
