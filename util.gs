@@ -61,6 +61,18 @@ function detectTime(result) {
     console.log('match dt4');
     return '0:' + a[1] + ':' + a[2];
   }
+  // Life Fitness
+  // 60:38
+  a = result.match(/\n([0-9]+)\s([0-9][0-9]):[ ]*([0-5][0-9])\s([0-9]+[\.]*[0-9]+)\n/);
+  if ( a != null) {
+    console.log('match dt9');
+    if(a[2] >= 60) {
+      return `1:${String(a[2]-60).padStart(2, '0')}:${a[3]}`;
+    }
+    else {
+      return `0:${a[2]}:${a[3]}`;
+    }
+  }
   // 0:49'01" LAP
   // 01:00′ 15"-
   a = [...result.matchAll(/([0-9]+):([0-5][0-9])[\'′ ]*([0-5])[ ]*([0-9])[\"\″]*/g)];

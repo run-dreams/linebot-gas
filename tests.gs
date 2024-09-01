@@ -1214,11 +1214,44 @@ var sample46 = `Running
 12:30
 16:40 25:05`;
 
+var sample47 = `8
+SHARP
+CAL
+Life Fitness
+KM
+505 35: 18 6.16
+STOP
+GO
+KM/H
+Ch
+KG
+MPH
+LBS
+注意: けがをする恐れがあります。けがをしないために、
+ベルトに乗り降りするは、心の注意を払ってき
+ださい。 使用前に取扱説明書をお読みください。
+警告! この機器は必ず正しい使用方法を理解した上でご
+使用ください。 使用してください。 運動中に、
+が回ったらてくだ
+警告! モニタリングシステムは、正確でない場合が
+ながる`;
+
+var sample48 = `CAL
+Life Fitness
+824 60:38 100
+< >
+GO
+STOP
+KM/H
+KG
+MPH
+LBS
+>`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
-  result += detectTest('sample45', sample45, '0:44:13', '3.52'); // TATTA
-  result += detectTest('sample46', sample46, '0:25:05', '5.00'); // TATTA
+  result += detectTest('sample47', sample47, '0:35:18', '6.16'); // Life Fitness
+  result += detectTest('sample48', sample48, '1:00:38', null); // Life Fitness
  
   console.log(`results: ${result}`);
 }
@@ -1271,6 +1304,8 @@ function myTest() {
   result += detectTest('sample44', sample44, '1:11:10', '10.00'); // SUUNTO
   result += detectTest('sample45', sample45, '0:44:13', '3.52'); // TATTA
   result += detectTest('sample46', sample46, '0:25:05', '5.00'); // TATTA
+  result += detectTest('sample47', sample47, '0:35:18', '6.16'); // Life Fitness
+  result += detectTest('sample48', sample48, '1:00:38', null); // Life Fitness
 
   console.log(`results: ${result}`);
 }
