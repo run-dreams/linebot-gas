@@ -621,6 +621,9 @@ function updateResult(tag, name, distance, duration) {
       if (orgName == 'unknown') {
         updateListedUserName(userId, name);
       }
+      else if(orgName != name) {
+        sheet.getRange(i, 4).setValue(getListedUserId(name));
+      }
       sheet.getRange(i, 5).setValue(name);
       sheet.getRange(i, 6).setValue(distance);
       sheet.getRange(i, 7).setValue(duration);
