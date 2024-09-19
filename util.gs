@@ -408,9 +408,9 @@ function getQuotedUserId(quotedMessageId) {
     // 追加はだいたいすぐに行われるので、記録の下から100件だけ探す。
     var requestObj = JSON.parse(sheet.getRange(i, 3).getValue());
     if(requestObj.events.length > 0) {
-      for(i=0; i < requestObj.events.length; i++) {
-        var event = requestObj.events[i];
-        if(event.message.quotedMessageId == quotedMessageId) {
+      for(j=0; j < requestObj.events.length; j++) {
+        var event = requestObj.events[j];
+        if(event.type == 'message' && event.message.id == quotedMessageId) {
           return event.source.userId;
         }
       }
