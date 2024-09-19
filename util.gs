@@ -359,7 +359,7 @@ function replyLineSetname(sourcename, replyToken, strMessage, name){
    console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage)
 }
 
-function replyAddResultInstruction(sourcename, replyToken){
+function replyAddResultInstruction(sourcename, nameAdd, replyToken){
    
   //Lineに送信するためのトークン
   var strToken = CHANNEL_ACCESS_TOKEN;
@@ -380,7 +380,7 @@ function replyAddResultInstruction(sourcename, replyToken){
                   'label': '追加',
                   'displayText': '記録を追加します。',
                   "inputOption": "openKeyboard",
-                  "fillInText": replyToken.substr(0,7) + ':追加\n氏名\tおなまえ\n距離\t0.00\n\タイム\t0:00:00'
+                  "fillInText": `${replyToken.substr(0,7)}:追加\n氏名\t${nameAdd}\n距離\t0.00\n\タイム\t0:00:00`
                 }
               },
             ]
@@ -395,6 +395,29 @@ function replyAddResultInstruction(sourcename, replyToken){
  
    UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply",options);
    console.log('reply to ' + sourcename + '「追加」')
+}
+
+function getQuotedUserId(quotedMessageId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Webhook Log');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = lastRow; i > lastRow - 100; i--) {
+    // 追加はだいたいすぐに行われるので、記録の下から100件だけ探す。
+    var requestObj = JSON.parse(sheet.getRange(i, 3).getValue());
+    if(requestObj.events.length > 0) {
+      for(i=0; i < requestObj.events.length; i++) {
+        var event = requestObj.events[i];
+        if(event.message.quotedMessageId == quotedMessageId) {
+          return event.source.userId;
+        }
+      }
+    }
+  }
+  return 'not found';
+
 }
 
 function recordRequest(e) {

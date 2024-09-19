@@ -1531,3 +1531,9 @@ function testGetEventDetail() {
 function testGetEvent() {
   console.log(getEvent('group-Id-in-the-sheet-for-development'));
 }
+
+// getQuotedUserId
+function testGetQuotedUserId() {
+  console.log(getQuotedUserId('hoge'));
+  console.log(getQuotedUserId('526271456615858273'));
+}

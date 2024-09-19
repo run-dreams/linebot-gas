@@ -178,7 +178,17 @@ function doPost(e) {
               break;
             }
             if(messageText.trim().match(/^追加[\s]*$/)) {
-              replyAddResultInstruction(sourcename, replyToken);
+              var nameAdd = 'おなまえ';
+              var quotedMessageId = event.message.quotedMessageId;
+              if(quotedMessageId) {
+                // 返信の場合、元メッセージのユーザの名前
+                nameAdd = getListedUserName(getQuotedUserId(quotedMessageId));
+              }
+              else {
+                // 通常の発言の場合、ユーザ自身の名前
+                nameAdd = getListedUserName(userId);
+              }
+              replyAddResultInstruction(sourcename, nameAdd, replyToken);
               break;
             }
             a = messageText.match(/^([0-9a-f]{7}):追加\n氏名[\s ]*(.*)\n距離[\s ]*([0-9]+\.[0-9]+)\nタイム[\s ]*([0-9]+[:：][0-5][0-9][:：][0-5][0-9])/);
