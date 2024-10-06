@@ -1593,11 +1593,16 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
   var items = [];
   for(i = 1; i < sheet.getLastRow(); i++) {
     if(records[i][0] == '') {
+      // まだ記録が少ない時の空行はスキップ（右側の集計計算式のため、getLastRow()は最低3になり、1件の時は空行も読むため）
       continue;
     }
     var distance = records[i][1] != '' ? records[i][1] : '??'
     var duration = records[i][2] != '' ? records[i][2] : '??'
     result += `${i}. ${records[i][0]}\t${distance}\t${duration}\n`;
+    if(sheet.getLastRow() - i > 13) {
+      // 14件以上あるとクリックリプライで対応できないため、最新13件を候補にする
+      continue;
+    }
     items.push(
       {
         'type': 'action', 
@@ -1654,9 +1659,16 @@ function replyIgnoreResultInstruction(sourcename, replyToken, groupId){
   var items = [];
   for(i = 1; i < sheet.getLastRow(); i++) {
     if(records[i][0] == '') {
+      // まだ記録が少ない時の空行はスキップ（右側の集計計算式のため、getLastRow()は最低3になり、1件の時は空行も読むため）
       continue;
     }
-    result += `${i}. ${records[i][0]}\t${records[i][1]}\t${records[i][2]}\n`;
+    var distance = records[i][1] != '' ? records[i][1] : '??'
+    var duration = records[i][2] != '' ? records[i][2] : '??'
+    result += `${i}. ${records[i][0]}\t${distance}\t${duration}\n`;
+    if(sheet.getLastRow() - i > 13) {
+      // 14件以上あるとクリックリプライで対応できないため、最新13件を候補にする
+      continue;
+    }
     items.push(
       {
         'type': 'action', 
