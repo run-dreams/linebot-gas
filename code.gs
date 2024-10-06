@@ -162,6 +162,16 @@ function doPost(e) {
               break;
             }
             if(messageText.trim().match(/^修正[\s]*$/)) {
+              var quotedMessageId = event.message.quotedMessageId;
+              if(quotedMessageId) {
+                // 「ナイスラン！」記録への返信の場合、該当の記録を元に修正
+                var target = getQuotedResult(quotedMessageId);
+                if(target) {
+                  replyUpdateResultInstructionSingle(sourcename, replyToken, target);
+                  break;
+                }
+              }
+              // 通常の発言の場合、当日の記録をリスト表示して選択
               replyUpdateResultInstruction(sourcename, replyToken, replyTo);
               break;
             }
@@ -231,7 +241,7 @@ function doPost(e) {
             var distance = detectDistance(result);
             var name = getListedUserName(userId);
             Logger.log('image analyzed: ' + result + String.fromCharCode(10) + 'distance: ' + distance + ', duration: ' + duration);
-            recordResult(event, result, JSON.stringify(obj), distance, duration);
+            var tag = recordResult(event, result, JSON.stringify(obj), distance, duration);
             if(duration != null || distance != null) {
               messageText = name + 'さん、ナイスラン！' + String.fromCharCode(10);
               messageText += '距離' + String.fromCharCode(9) + (distance != null ? distance : '??') + String.fromCharCode(10);
@@ -242,7 +252,7 @@ function doPost(e) {
                 if(eventInfo != null) {
                   messageText += `\n\n${eventInfo.summary}`;
                 }
-                replyLine(sourcename, replyToken, messageText);
+                replyLine(sourcename, replyToken, messageText, tag);
               } else if(name == 'unknown') {
                 // 名前が未設定
                 replyLineSetname(sourcename, replyToken, messageText, name);
