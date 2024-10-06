@@ -236,7 +236,8 @@ function sendLine(to, strMessage){
    console.log(to + String.fromCharCode(10) + strMessage)
 }
 
-function replyLine(sourcename, replyToken, strMessage){
+// LINE APIに応答メッセージを送信、記録する
+function replyLine(sourcename, replyToken, strMessage, tag){
    
   //Lineに送信するためのトークン
   var strToken = CHANNEL_ACCESS_TOKEN;
@@ -256,10 +257,12 @@ function replyLine(sourcename, replyToken, strMessage){
  
    };
  
-   UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply",options);
-   console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage)
+   var response = UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply", options);
+   console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage);
+   recordReply(strMessage, response, tag);
 }
 
+// ラン画像の分析で？？があった場合のポストバックアクション
 function replyLineCorrect(sourcename, replyToken, strMessage, name, duration, distance){
 
   var tag = replyToken.substr(0,7);
@@ -314,6 +317,7 @@ function replyLineCorrect(sourcename, replyToken, strMessage, name, duration, di
    console.log('reply to ' + sourcename + String.fromCharCode(10) + strMessage)
 }
 
+// ラン画像の分析でまだ名前が未登録の場合のポストバックアクション
 function replyLineSetname(sourcename, replyToken, strMessage, name){
 
   var tag = replyToken.substr(0,7);
@@ -397,6 +401,7 @@ function replyAddResultInstruction(sourcename, nameAdd, replyToken){
    console.log('reply to ' + sourcename + '「追加」')
 }
 
+// 引用メッセージの元ユーザを得る
 function getQuotedUserId(quotedMessageId) {
 
   var ss = SpreadsheetApp.getActive()
@@ -420,6 +425,35 @@ function getQuotedUserId(quotedMessageId) {
 
 }
 
+// 返信元の応答メッセージから記録を得る
+function getQuotedResult(quotedMessageId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Reply Log');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = lastRow; i > 0 && i > lastRow - 100; i--) {
+    // アクションはだいたいすぐに行われるので、応答メッセージの下から100件だけ探す。
+    if(sheet.getRange(i, 2).getValue() == quotedMessageId) {
+      // ナイスラン！記録なら、その記録情報を返す（messageから判定、切り出し）
+      var messageText = sheet.getRange(i, 6).getValue();
+      var a = messageText.match(/^(.*)さん、ナイスラン！\n距離[\s ]*([0-9]+\.[0-9]+)\nタイム[\s ]*([0-9]+[:：][0-5][0-9][:：][0-5][0-9])/);
+      if(a != null){
+        var tag = sheet.getRange(i, 5).getValue();
+        return {
+          tag: tag,
+          name: a[1],
+          distance: a[2],
+          duration: a[3]
+        };
+      }
+    }
+  }
+  return null;
+}
+
+// Webhookリクエストを記録
 function recordRequest(e) {
 
   // JSONをパース
@@ -495,6 +529,7 @@ function recordRequest(e) {
   sheet.appendRow(values);
 }
 
+// ラン画像の分析結果を記録（ラン記録の場合のみ）
 function recordResult(event, analyzed, textAnnotations, distance, duration) {
 
   var userId = event.source.userId;
@@ -553,6 +588,63 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
         break;
       case "tag":
         val = tag;
+        break;
+      default:
+        break;
+    }
+    values.push(val);
+  }
+
+  // 行を追加
+  sheet.appendRow(values);
+
+  return tag;
+}
+
+// ボットの応答メッセージ送出を記録
+function recordReply(message, response, tag) {
+
+  date = new Date();
+  var jsonResponse = JSON.parse(response.getContentText());
+
+  // 先頭のsentMessagesを取得
+  var firstMessage = jsonResponse.sentMessages[0];
+  var messageId = firstMessage.id;
+  var quoteToken = firstMessage.quoteToken;
+
+  //  
+  // Reply内容とAPIレスポンスをスプレッドシートに追記
+  //
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Reply Log');
+
+  // ヘッダ行を取得
+  var headers = sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
+
+  // ヘッダに対応するデータを取得
+  var values = [];
+  for (i in headers){
+    var header = headers[i];
+    var val = "";
+    switch(header) {
+      case "date":
+        val = new Date();
+        break;
+      case "messageId":
+        val = messageId;
+        break;
+      case "quoteToken":
+        val = quoteToken;
+        break;
+      case "response":
+        val = response.getContentText();
+        break;
+      case "tag":
+        val = tag;
+        break;
+      case "message":
+        val = message;
         break;
       default:
         break;
@@ -1623,6 +1715,45 @@ function replyUpdateResultInstruction(sourcename, replyToken, groupId){
   else {
     message.text = result + '\n記録がありません。';
   }
+   
+  //Lineに送信するためのトークン
+  var strToken = CHANNEL_ACCESS_TOKEN;
+  var options =
+   {
+     "method"  : "post",
+     "payload" : JSON.stringify({
+       'messages': [message],
+       'replyToken' : replyToken,
+      }),
+     "headers" : {"Authorization" : "Bearer " + strToken, 
+       "Content-Type" : "application/json"
+     }
+   };
+ 
+   UrlFetchApp.fetch("https://api.line.me/v2/bot/message/reply",options);
+   console.log('reply to ' + sourcename + '「修正」')
+}
+
+// 返信で「修正」が指示された場合の応答をする。
+function replyUpdateResultInstructionSingle(sourcename, replyToken, target){
+
+  var message = {'type':'text'};
+  var items = [];
+  var result = `1. ${target.name}\n`;
+  items.push(
+    {
+      'type': 'action', 
+      'action': {
+        'type': 'postback',
+        'data': `${target.tag}:修正`,
+        'label': `1. ${target.name}`,
+        'displayText': `1. ${target.name} の記録を修正します。`,
+        "inputOption": "openKeyboard",
+        "fillInText": `${target.tag}:修正\n氏名\t${target.name}\n距離\t${target.distance != '??' ? target.distance : '0.00'}\nタイム\t${target.duration != '??' ? target.duration : '0:00:00'}`
+      }
+    });
+  message.quickReply = {'items': items};
+  message.text = result + '\n修正する記録を選択してください。';
    
   //Lineに送信するためのトークン
   var strToken = CHANNEL_ACCESS_TOKEN;
