@@ -539,6 +539,10 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
     groupId = event.source.groupId;
   }
   var tag = event.replyToken.substr(0,7);
+  var ignore = '';
+  if(isExistRequest(tag)) {
+    ignore = '重複リクエスト';
+  }
 
   date = new Date();
 
@@ -589,6 +593,9 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
       case "tag":
         val = tag;
         break;
+      case "ignore":
+        val = ignore;
+        break;
       default:
         break;
     }
@@ -599,6 +606,23 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
   sheet.appendRow(values);
 
   return tag;
+}
+
+// 重複Webhookを集計に入れないよう未処理か確認する
+function isExistRequest(tag) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('Analyze Log');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = lastRow; i > lastRow - 10; i--) {
+    // Webhook二重処理のチェック用なので、記録の下から10件だけ探す。
+    if (sheet.getRange(i, 10).getValue() == tag) {
+      return 'duplicated';
+    }
+  }
+  return null;
 }
 
 // ボットの応答メッセージ送出を記録
