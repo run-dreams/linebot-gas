@@ -61,6 +61,13 @@ function detectTime(result) {
     console.log('match dt4');
     return '0:' + a[1] + ':' + a[2];
   }
+  // Strava
+  // 29m 38s
+  a = result.match(/\n([0-5][0-9])m ([0-5][0-9])s\n/);
+  if ( a != null) {
+    console.log('match dt10');
+    return '0:' + a[1] + ':' + a[2];
+  }
   // Life Fitness
   // 60:38
   a = result.match(/\n([0-9]+)\s([0-9][0-9]):[ ]*([0-5][0-9])\s([0-9]+[\.]*[0-9]+)\n/);
