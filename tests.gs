@@ -1248,10 +1248,21 @@ MPH
 LBS
 >`;
 
+var sample49 = `STRAVA
+STOP
+Morning Run
+Run
+Pace
+Time
+5.0 km
+5:51/km
+29m 38s
+PR
+Masanori just set a PR in the 5K!`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample47', sample47, '0:35:18', '6.16'); // Life Fitness
-  result += detectTest('sample48', sample48, '1:00:38', null); // Life Fitness
+  result += detectTest('sample49', sample49, '0:29:38', '5.0'); // Strava
  
   console.log(`results: ${result}`);
 }
@@ -1306,6 +1317,7 @@ function myTest() {
   result += detectTest('sample46', sample46, '0:25:05', '5.00'); // TATTA
   result += detectTest('sample47', sample47, '0:35:18', '6.16'); // Life Fitness
   result += detectTest('sample48', sample48, '1:00:38', null); // Life Fitness
+  result += detectTest('sample49', sample49, '0:29:38', '5.0'); // Strava
 
   console.log(`results: ${result}`);
 }
