@@ -63,10 +63,20 @@ function detectTime(result) {
   }
   // Strava
   // 29m 38s
-  a = result.match(/\n([0-5][0-9])m ([0-5][0-9])s\n/);
+  a = result.match(/\n([0-5]*[0-9])m ([0-5]*[0-9])s/);
   if ( a != null) {
+    var mm = a[1].padStart(2, '0');
+    var ss = a[2].padStart(2, '0');
     console.log('match dt10');
-    return '0:' + a[1] + ':' + a[2];
+    return `0:${mm}:${ss}`;
+  }
+  // Strava
+  // 1h 1m
+  a = result.match(/\n([0-9]+)h ([0-5]*[0-9])m/);
+  if ( a != null) {
+    var mm = a[2].padStart(2, '0');
+    console.log('match dt10\'');
+    return `${a[1]}:${mm}:00`;
   }
   // Life Fitness
   // 60:38

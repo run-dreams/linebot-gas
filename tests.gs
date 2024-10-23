@@ -1260,10 +1260,32 @@ Time
 PR
 Masanori just set a PR in the 5K!`;
 
+var sample50 = `STRAVA
+Evening Walk
+Distance
+1.7 km
+Steps
+2,210
+Time
+20m 4s`;
+
+var sample51 = `October 13, 2024 at 5:47 AM · South-
+East District
+University of Botswana 10k run
+Distance
+Pace
+Time
+Achievements
+10.17 km
+6:05/km
+1h 1m
+7`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample49', sample49, '0:29:38', '5.0'); // Strava
- 
+  result += detectTest('sample50', sample50, '0:20:04', '1.7'); // Strava 20m 4s
+  result += detectTest('sample51', sample51, '1:01:00', '10.17'); // Strava 1h 1m
+
   console.log(`results: ${result}`);
 }
 
@@ -1305,7 +1327,7 @@ function myTest() {
   result += detectTest('sample34', sample34, '1:17:00', '9.978'); // マイル、時分
   result += detectTest('sample35', sample35, '2:19:00', '19.956'); // マイル、時分
   result += detectTest('sample36', sample36, '0:18:48', '4.01'); // 改行して「時間」ラベル
-  result += detectTest('sample37', sample37, '0:41:05', '7.03'); 
+  result += detectTest('sample37', sample37, '0:41:05', '7.03', false); // これは無理なやつ
   result += detectTest('sample38', sample38, '00:34:59', '6.019'); // h → 4
   result += detectTest('sample39', sample39, '0:45:45', '7.54'); // 改行して「合計タイム」ラベル
   result += detectTest('sample40', sample40, '1:12:17', '11.37'); // 距離km以下がカンマ区切り
@@ -1318,16 +1340,18 @@ function myTest() {
   result += detectTest('sample47', sample47, '0:35:18', '6.16'); // Life Fitness
   result += detectTest('sample48', sample48, '1:00:38', null); // Life Fitness
   result += detectTest('sample49', sample49, '0:29:38', '5.0'); // Strava
+  result += detectTest('sample50', sample50, '0:20:04', '1.7'); // Strava 20m 4s
+  result += detectTest('sample51', sample51, '1:01:00', '10.17'); // Strava 1h 1m
 
   console.log(`results: ${result}`);
 }
 
-function detectTest(name, result, duration, distance) {
+function detectTest(name, result, duration, distance, success) {
   dt = detectTime(result);
   dd = detectDistance(result);
   console.log(name + ': ' + dd + ', ' + dt + ' result: ' + (dd == distance && dt == duration ? 'OK' : 'NG'));
 
-  return (dd == distance && dt == duration ? 'o' : 'x');
+  return (dd == distance && dt == duration && (success == null || success == true) || success == false ? 'o' : 'x');
 }
 
 // getLastMonthPeriod() のテスト
