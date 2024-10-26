@@ -1349,9 +1349,10 @@ function myTest() {
 function detectTest(name, result, duration, distance, success) {
   dt = detectTime(result);
   dd = detectDistance(result);
+  ds = detectSheet(result);
   console.log(name + ': ' + dd + ', ' + dt + ' result: ' + (dd == distance && dt == duration ? 'OK' : 'NG'));
 
-  return (dd == distance && dt == duration && (success == null || success == true) || success == false ? 'o' : 'x');
+  return (dd == distance && dt == duration && ds == null && (success == null || success == true) || success == false ? 'o' : 'x');
 }
 
 // getLastMonthPeriod() のテスト
