@@ -4,7 +4,8 @@
 function detectSheet(result) {
   // 最低限の判定
   let a = result.match(/Run Dreams 第/);
-  if ( a == null) {
+  let b = result.match(/^■.*\[(.*)\]/);
+  if ( a == null && b == null) {
     return null;
   }
   // 日数と年月日も読み取りを試みる
@@ -16,6 +17,15 @@ function detectSheet(result) {
 ${a[1]}日目 ${a[2]}年 ${a[3]}月 ${a[4]}日
 明日もよろしくお願いします！`;
   }
+  b = result.match(/^■.*\[(.*)\]([0-9]+)日[日目]([1]*[0-9])月([1-3]*[0-9])日/);
+  if ( a != null) {
+    console.log('detect sheet with date info.');
+    return `ナイスラン！
+リレーの記録表を受け取りました。
+会場：${b[1]} / ${b[2]}日目 ${b[3]}月 ${b[4]}日
+明日もよろしくお願いします！`;
+  }
+
   console.log('detect sheet.');
   return 'ナイスラン！\nリレーの記録表を受け取りました。';
 }
