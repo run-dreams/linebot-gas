@@ -1484,11 +1484,18 @@ const sheetSample2 = `Run Dreams 第/Z32日目2024年7月5日(金)天气孔
 46
 5分/秒`;
 
+const sheetSample3 = `■ㄏㄧㄚㄎㄚㄚ [別所沼公園]1345日日10月26日(土)
+天気<も1) 気温19℃ 湿度 99%
+周回
+あと`;
+
 function testDetectSheet() {
   console.log(detectSheet(sample1));
   console.log(detectSheet(sheetSample1));
   // 付加情報が読み取れなかった場合
   console.log(detectSheet(sheetSample2));
+  // タイトルが変更になった
+  console.log(detectSheet(sheetSample3));
 }
 
 function testSubmitParticipants() {
