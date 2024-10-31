@@ -606,7 +606,7 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
         break;
       case "name":
         val = getListedUserName(userId);
-        if(val == 'unknown') {
+        if(val == 'unknown' && !isExistUser(userId)) {
           // リストになければ追加しておく
           recordUser(userId);
         }
@@ -844,6 +844,23 @@ function ignoreResult(tag) {
     }
   }
   return '記録がありません';
+
+}
+
+// ユーザ登録チェック
+function isExistUser(userId) {
+
+  var ss = SpreadsheetApp.getActive()
+  var sheet = ss.getSheetByName('User List');
+
+  const lastRow = sheet.getLastRow();
+
+  for (var i = 2; i <= lastRow; i++) {
+    if (sheet.getRange(i, 1).getValue() == userId) {
+      return true;
+    }
+  }
+  return false;
 
 }
 

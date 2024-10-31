@@ -1581,3 +1581,9 @@ function testGetQuotedUserId() {
   console.log(getQuotedUserId('hoge'));
   console.log(getQuotedUserId('526271456615858273'));
 }
+
+// isExistUser(userId)
+function testIsExistUser() {
+  console.log(`isExistUser("hogehoge"): ${isExistUser("hogehoge")}`);
+  console.log(`isExistUser("user-Id-in-the-sheet-for-development"): ${isExistUser("user-Id-in-the-sheet-for-development")}`);
+}
