@@ -1281,10 +1281,48 @@ Achievements
 1h 1m
 7`;
 
+var sample52 = `15.11
+7.84
+TA
+Walking
+2024/11/13 (k) 10:42
+步数
+8,008
+タイム
+1:29:31
+距離
+5.53kg
+消費カロリー
+352kc
+0:00
+14:55
+29:50
+44:45
+59:40
+1:29:31`;
+
+var sample53 = `18.19
+9.28
+TA
+Walking
+2024/11/12 (X) 10:06
+步数
+距離
+10,947 7.76k
+タイム
+消費カロリー
+1:52:09
+491kca
+0:00
+18:41
+37:22
+56:03
+1:14:44 1:52:09`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample50', sample50, '0:20:04', '1.7'); // Strava 20m 4s
-  result += detectTest('sample51', sample51, '1:01:00', '10.17'); // Strava 1h 1m
+  result += detectTest('sample52', sample52, '1:29:31', '5.53'); // TATTA kg
+  result += detectTest('sample53', sample53, '1:52:09', '7.76'); // TATTA k
 
   console.log(`results: ${result}`);
 }
@@ -1342,6 +1380,8 @@ function myTest() {
   result += detectTest('sample49', sample49, '0:29:38', '5.0'); // Strava
   result += detectTest('sample50', sample50, '0:20:04', '1.7'); // Strava 20m 4s
   result += detectTest('sample51', sample51, '1:01:00', '10.17'); // Strava 1h 1m
+  result += detectTest('sample52', sample52, '1:29:31', '5.53'); // TATTA kg
+  result += detectTest('sample53', sample53, '1:52:09', '7.76'); // TATTA k
 
   console.log(`results: ${result}`);
 }

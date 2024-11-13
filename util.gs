@@ -207,7 +207,7 @@ function detectDistance(result) {
     return a[1] + '.' + a[2] + a[3];
   }
   // 3.70km
-  a = [...result.matchAll(/([0-9]+)[\.,]([0-9]+)[ ]*[kK][mM]/g)];
+  a = [...result.matchAll(/([0-9]+)[\.,]([0-9]+)[ ]*[kK][mMg]*/g)];
   if ( a.length > 0) {
     for(i=0; i<a.length;i++) {
       distance = a[i][1] + '.' + a[i][2];
