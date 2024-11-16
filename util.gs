@@ -569,6 +569,7 @@ function recordResult(event, analyzed, textAnnotations, distance, duration) {
   var ignore = '';
   if(isExistRequest(tag)) {
     ignore = '重複リクエスト';
+    tag = `重複:${tag}`;
   }
 
   date = new Date();
