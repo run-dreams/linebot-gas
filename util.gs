@@ -180,6 +180,15 @@ function detectDistance(result) {
     console.log(`match dd9 with ${a[0]}`);
     return a[1] + '.' + a[2];
   }
+  // 步数
+  // 7,979
+  // 距離
+  // 5.99km
+  a = result.match(/距離\n([0-9]+)[\.,]([0-9]+)km/);
+  if ( a != null) {
+    console.log(`match dd2' with ${a[0]}`);
+    return a[1] + '.' + a[2];
+  }
   // 7.67
   // 距離(km)
   a = result.match(/([0-9]+)[\.,]([0-9]+)\n(距離|キロメートル)/);

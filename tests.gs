@@ -1319,10 +1319,27 @@ Walking
 56:03
 1:14:44 1:52:09`;
 
+var sample54 = `3:28
+6:46
+步数
+Walking
+2024/12/7 (±) 14:12
+12,972
+距離
+7.43km
+タイム
+消費カロリー
+1:56:17 569kcal
+mmm
+0:00
+19:22
+38:44
+58:06
+1:17:28 1:56:17`;
+
 function newTest() {
   var result = '';
-  result += detectTest('sample52', sample52, '1:29:31', '5.53'); // TATTA kg
-  result += detectTest('sample53', sample53, '1:52:09', '7.76'); // TATTA k
+  result += detectTest('sample54', sample54, '1:56:17', '7.43'); // TATTA 歩数が距離に
 
   console.log(`results: ${result}`);
 }
@@ -1382,6 +1399,7 @@ function myTest() {
   result += detectTest('sample51', sample51, '1:01:00', '10.17'); // Strava 1h 1m
   result += detectTest('sample52', sample52, '1:29:31', '5.53'); // TATTA kg
   result += detectTest('sample53', sample53, '1:52:09', '7.76'); // TATTA k
+  result += detectTest('sample54', sample54, '1:56:17', '7.43'); // TATTA 歩数が距離に
 
   console.log(`results: ${result}`);
 }
