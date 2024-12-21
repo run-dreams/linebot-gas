@@ -33,6 +33,10 @@
             width: 50px;
             margin-right: 10px;
         }
+        .form-row .extras-input {
+            width: 25px;
+            margin-right: 10px;
+        }
         .form-row button {
             width: auto;
             white-space: nowrap;
@@ -122,9 +126,12 @@
 
     <div id="form-container">
         <div class="lap-selection">
-            1周目: 
-            <label for="lap1"><input type="radio" id="lap1" name="1stlap" value="539.2" checked> 384m</label>
-            <label for="lap2"><input type="radio" id="lap2" name="1stlap" value="272.2"> 651m</label>
+            コース（会場）: 
+            <select id="lap-selection" name="1stlap">
+                <option value="539.2" data-guide="先頭ランナー6周で5km" selected>別所沼：会員リレー</option>
+                <option value="272.2" data-guide="先頭ランナーはショートコース">別所沼：チームリレー（フルマラソン）</option>
+                <option value="384" data-guide="（　）内は106周〜108周の内数">別所沼：除夜の鐘リレーマラソン２０２４</option>
+            </select>
         </div>
         <? for (var i = 0; i < existingRecords.length; i++) { ?>
         <div class="form-row">
@@ -135,6 +142,7 @@
                 <? } ?>
             </datalist>
             <input type="number" class="laps-input" value="<?= existingRecords[i].laps ?>" placeholder="周回数" maxlength="2">
+            （<input type="number" class="extras-input" value="<?= existingRecords[i].extras ?>" maxlength="2">）
             <? if (i === existingRecords.length - 1) { ?>
             <button type="button" onclick="addRow(this)">追加</button>
             <? } else { ?>
@@ -143,6 +151,7 @@
         </div>
         <? } ?>
     </div>
+    <div id="guidance-message" style="display:none; color: green; margin-bottom: 10px;"></div>
     <button type="button" onclick="showModal()">確認</button>
 
     <div id="modal">
@@ -155,6 +164,7 @@
     <div class="instructions">
       <ul>
         <li>１周目のランナーを先頭にしてください。</li>
+        <li>（　）内は106周〜108周の内数を入力します。（除夜の鐘リレーマラソン用）</li>
         <li>送信完了後、「集計」で確認をお願いします。</li>
         <li>ランナーと周回数がすでに表示されている場合は記録済みです。修正が必要な場合は編集して送信ください。</li>
       </ul>
@@ -176,6 +186,13 @@
             lapsInput.classList.add('laps-input');
             lapsInput.placeholder = '周回数';
 
+            const extrasWrapperOpen = document.createTextNode(' （ ');
+            const extrasInput = document.createElement('input');
+            extrasInput.type = 'number';
+            extrasInput.classList.add('extras-input');
+            extrasInput.placeholder = '';
+            const extrasWrapperClose = document.createTextNode(' ） ');
+            
             const addButton = document.createElement('button');
             addButton.type = 'button';
             addButton.textContent = '追加';
@@ -190,6 +207,9 @@
 
             newRow.appendChild(participantInput);
             newRow.appendChild(lapsInput);
+            newRow.appendChild(extrasWrapperOpen);
+            newRow.appendChild(extrasInput);
+            newRow.appendChild(extrasWrapperClose);
             newRow.appendChild(addButton);
             formContainer.appendChild(newRow);
         }
@@ -201,9 +221,13 @@
             formRows.forEach(row => {
                 const name = row.querySelector('.participant-input').value;
                 const laps = row.querySelector('.laps-input').value;
+                const extras = row.querySelector('.extras-input').value;
                 if (name && laps) {
                     const listItem = document.createElement('li');
                     listItem.textContent = `${name}: ${laps}周`;
+                    if(extras) {
+                        listItem.textContent += ` (${extras})`;
+                    }
                     confirmationList.appendChild(listItem);
                 }
             });
@@ -221,15 +245,16 @@
             responseMessage.textContent = '送信しています';
             responseMessage.style.display = 'block';
             
-            const selectedLap = document.querySelector('input[name="1stlap"]:checked').value;
+            const selectedLap = document.getElementById('lap-selection').value;
 
             const participants = [];
             const formRows = document.querySelectorAll('.form-row');
             formRows.forEach(row => {
                 const name = row.querySelector('.participant-input').value;
                 const laps = row.querySelector('.laps-input').value;
+                const extras = row.querySelector('.extras-input').value;
                 if (name && laps) {
-                    participants.push({ name, laps });
+                    participants.push({ name, laps, extras });
                 }
             });
             google.script.run.withSuccessHandler(function(response) {

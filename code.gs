@@ -349,13 +349,28 @@ function submitParticipants(groupId, participants, selectedLap) {
     // ここでデータをスプレッドシートに保存するなどの処理を行う
     console.log(`${groupId} - 名前: ${participant.name}, 周回数: ${participant.laps}`);
     result += `\n${participant.name} (${participant.laps})`
-    var distance = participant.laps * 923.2;
-    if (index === 0) {
-      // 先頭の参加者は１周目とみなし、ショートコースの差分を差し引く。（別所沼ルール）
-      distance -= selectedLap; // #134
+    var distance = 0;
+    var venue = '別所沼公園';
+    if(selectedLap == 384) {
+      // 別所沼：除夜の鐘2024
+      distance = participant.laps * 384;
+      venue = '別所沼：除夜の鐘2024';
+      if (participant.extras > 0) {
+        // 106周目〜108周目は651m
+        distance += 267 * participant.extras; // 1周につき267m加算
+        venue += `(${participant.extras})`; // 誰が長目を何周走ったか記録
+      }
+    }
+    else {
+      // 別所沼：通常リレー
+      distance = participant.laps * 923.2;
+      if (index === 0) {
+        // 先頭の参加者は１周目とみなし、ショートコースの差分を差し引く。（別所沼ルール）
+        distance -= selectedLap; // #134
+      }
     }
     // TODO: 会場も記録されるようにする。会場ごとに周回の距離も異なる。
-    addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, "別所沼公園", "dummy");
+    addResult("tag", participant.name, groupId, distance/1000, "", participant.laps, venue, "dummy");
   });
 
   console.log(`${groupId}\nリレー参加記録フォームからの登録を記録しました。\n${result}`);

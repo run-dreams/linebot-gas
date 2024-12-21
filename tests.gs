@@ -1571,6 +1571,20 @@ function testSubmitParticipants() {
   console.log(result);
 }
 
+function testSubmitParticipants108() {
+  // テスト用のparticipantsリストを生成
+  var participants = [
+    {name: "山田 太郎", laps: 6, extras: ''},
+    {name: "浦和うなこ", laps: 52, extras: ''},
+    {name: "田中 花子", laps: 33, extras: 2},
+    {name: "鈴木 一郎", laps: 17, extras: 1}
+  ];
+
+  // submitParticipants関数を呼び出してテスト
+  var result = submitParticipants("group-Id-in-the-sheet-for-development", participants, "384");
+  console.log(result);
+}
+
 // 記録フォームに表示する参加者候補リストを作成
 function testGetParticipantsFromSheet() {
   console.log(getParticipantsFromSheet('group-Id-in-the-sheet-for-development'));
