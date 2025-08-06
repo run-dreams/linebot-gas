@@ -231,6 +231,10 @@ function doPost(e) {
             if(records != null) {
               // 記録表の写メだった場合はメッセージを返して終了
               recordResult(event, result, JSON.stringify(obj), '', '');
+              // 記録表以外の除外画像の場合は何も返さず終了
+              if(records == '') {
+                break;
+              }
               // TODO: フォームが対応したら年月日もパラメータで渡す
               var formUrl = ScriptApp.getService().getUrl() + '?groupId=' + groupId;
               var note = '\n\n登録後、「集計」で記録を確認してください。'

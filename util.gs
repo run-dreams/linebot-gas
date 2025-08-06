@@ -5,8 +5,13 @@ function detectSheet(result) {
   // 最低限の判定
   let a = result.match(/Run Dreams 第/);
   let b = result.match(/^■.*\[(.*)\]/);
+  let c = result.match(/Hiroshima\nNagasaki\nRelay\n/); // 広島長崎リレーマラソン
   if ( a == null && b == null) {
-    return null;
+    if( c == null ) {
+      return null;
+    }
+    console.log('detect summary image.');
+    return ``;
   }
   // 日数と年月日も読み取りを試みる
   a = result.match(/Run Dreams 第(.*)日目([0-9]+)年([1]*[0-9])月([1-3]*[0-9])日/);

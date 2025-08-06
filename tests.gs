@@ -1557,6 +1557,64 @@ function testDetectSheet() {
   console.log(detectSheet(sheetSample3));
 }
 
+const sheetSample4 = `Hiroshima
+Nagasaki
+Relay
+RUN
+DREAMS
+Marathon
+2025
+申告距離
+8/6 8/7 8/8
+8/9
+実施距離
+浦和うなこ
+7.4
+7.4
+合計距離
+337.2
+75.9
+0.0
+0.0 0.0
+75.9
+目標距離 423.4
+実施距離一目標距離 -347.5
+1. 集計期間 8月6日/8:30 ~ 8月9日/11:00 [約72時間 ]
+2.8/6の別所沼ランの報告数値に相違あり 訂正数値で集計`;
+
+const sheetSample5 = `Hiroshima
+Nagasaki
+Relay
+Marathon
+RUN DREAMS
+2025
+申告距離
+8/6 8/7 8/8
+8/9 実施距離
+浦和うなこ
+7.4
+7.4
+合計距離
+337.2 90.4 0.0
+0.0 0.0
+90.4
+目標距離 423.4
+実施距離一目標距離 -333.0
+1. 集計期間 8月6日/8:30 ~ 8月9日/11:00 [約72時間]
+2.8/6の別所沼ランの報告数値に相違あり 訂正数値で集計`;
+
+function testDetectSheet() {
+  console.log(detectSheet(sample1));
+  console.log(detectSheet(sheetSample1));
+  // 付加情報が読み取れなかった場合
+  console.log(detectSheet(sheetSample2));
+  // タイトルが変更になった
+  console.log(detectSheet(sheetSample3));
+  // 広島長崎リレーマラソン
+  console.log(detectSheet(sheetSample4));
+  console.log(detectSheet(sheetSample5));
+}
+
 function testSubmitParticipants() {
   // テスト用のparticipantsリストを生成
   var participants = [
