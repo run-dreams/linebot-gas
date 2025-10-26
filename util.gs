@@ -6,7 +6,8 @@ function detectSheet(result) {
   let a = result.match(/Run Dreams 第/);
   let b = result.match(/^■.*\[(.*)\]/);
   let c = result.match(/Hiroshima\nNagasaki\nRelay\n/); // 広島長崎リレーマラソン
-  if ( a == null && b == null) {
+  let d = result.match(/立会者[\n\s]Run Dreams/);
+  if ( a == null && b == null && d == null) {
     if( c == null ) {
       return null;
     }
