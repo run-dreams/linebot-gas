@@ -1,3 +1,24 @@
+function checkKeywords() {
+  const text = `
+    Hiroshima
+    Nagasaki
+    RUN DREAMS
+    Relay
+    Marathon
+  `;
+
+  const keywords = ["Hiroshima", "Nagasaki", "Relay", "Marathon", "RUN DREAMS"];
+
+  // every() メソッドを使用
+  const isMatch = keywords.every(keyword => text.includes(keyword));
+
+  if (isMatch) {
+    Logger.log("すべてのキーワードが含まれています。");
+  } else {
+    Logger.log("一部のキーワードが見つかりませんでした。");
+  }
+}
+
 var sample1 = `7:34 1
 CAND
 E1649
@@ -1464,7 +1485,7 @@ function testMonthlySummary() {
 
 // getSummary() のテスト
 function testGetSummary() {
-  console.log(getSummary('group-Id-in-the-sheet-for-development'));
+  console.log(getSummary('Ce1f3f0b579b17bf4258adad2e204a377'));
 }
 
 // getPreviousSummary() のテスト
@@ -1688,7 +1709,7 @@ function testGetEventSummaryPersonal() {
 
 // 特定イベントの参加者を取得する
 function testGetEventAttendies() {
-  console.log(getEventAttendies('event-Id-in-the-sheet-for-development'));
+  console.log(getEventAttendies('hiroshima-nagasaki-2025'));
 }
 
 // 特定イベントの集計を取得する
@@ -1698,12 +1719,12 @@ function testGetEventSummary() {
 
 // 特定イベントの集計を取得する（参加者リスト付き）
 function testGetEventDetail() {
-  console.log(getEventSummary('group-Id-in-the-sheet-for-development', 'event-Id-in-the-sheet-for-development', true));
+  console.log(getEventSummary('Ce1f3f0b579b17bf4258adad2e204a377', 'hiroshima-nagasaki-2025', true));
 }
 
 // 「イベント」
 function testGetEvent() {
-  console.log(getEvent('group-Id-in-the-sheet-for-development'));
+  console.log(getEvent('Ce1f3f0b579b17bf4258adad2e204a377'));
 }
 
 // getQuotedUserId
