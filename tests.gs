@@ -1603,6 +1603,112 @@ RUN DREAMS
 1. 集計期間 8月6日/8:30 ~ 8月9日/11:00 [約72時間]
 2.8/6の別所沼ランの報告数値に相違あり 訂正数値で集計`;
 
+const sheetSample6 = `浦和うなこ
+氏名
+#1708日
+■ㄉㄧㄡˇ
+[別所沼公園]2025年10月26日(日)
+天気小雨 気温 15℃ 湿度
+%
+周回
+あと
+ラップ
+卜一夕儿
+距離
+氏名
+周回 あと
+46
+1
+分
+秒
+時間
+分
+秒秒秒秒秒秒秒秒秒秒
+分分分分分
+分分分
+34,809
+35,733
+36,656
+37,579
+38,502
+39,425
+40,349
+41,272
+代表者 浦和うな子 |立会者 Run Dreams
+(
+)
+( )
+(
+)
+(
+)
+(
+42,195
+夕一下
+時
+分`;
+
+const sheetSample7 = `浦和うなこ
+距離
+21,885
+22,808
+23,731
+24,654
+25,577
+26,501
+27,424
+28,347
+29,270
+30,193
+秒
+秒
+秒
+31,117
+32.040
+32,963
+33,886
+34,809
+35,733
+1708日
+●ㄏㄨㄥˇ [ 別所沼公園] 2025年10月26日 (日)
+天気小雨 気温 15℃ 温度 91
+de
+%
+周回
+あと
+ラップ
+卜一夕儿
+距離
+氏名
+45
+2
+20,961
+46
+1
+代表者 浦和うなこ
+立会者
+Run Dreams
+(
+)
+分
+秒秒秒秒
+秒秒秒秒秒
+秘
+分分分分分分分分分分分分分
+分
+秒秒秒秒秒秒秒
+36,656
+37,579
+38,502
+39,425
+40,349
+41,272
+42,195
+夕一下
+氏名
+時
+分`;
+
 function testDetectSheet() {
   console.log(detectSheet(sample1));
   console.log(detectSheet(sheetSample1));
@@ -1613,6 +1719,9 @@ function testDetectSheet() {
   // 広島長崎リレーマラソン
   console.log(detectSheet(sheetSample4));
   console.log(detectSheet(sheetSample5));
+  // チームリレー
+  console.log(detectSheet(sheetSample6));
+  console.log(detectSheet(sheetSample7));
 }
 
 function testSubmitParticipants() {
